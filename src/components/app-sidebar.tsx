@@ -17,18 +17,20 @@ import {
   Settings,
   HelpCircle,
 } from "lucide-react"
+import { Link } from "react-router"
+// import path from "path"
 
 const menuItems = [
-  { title: "Overview", icon: LayoutGrid, active: true },
-  { title: "Patients", icon: Users },
-  { title: "Appointment", icon: Calendar },
-  { title: "Analytics", icon: BarChart3 },
-  { title: "Profile", icon: User },
+  { title: "Overview", icon: LayoutGrid, active: true, path: "/" },
+  { title: "Patients", icon: Users, path: "/patients" },
+  { title: "Appointment", icon: Calendar, path: "/appointments" },
+  { title: "Analytics", icon: BarChart3, path: "/analytics" },
+  { title: "Profile", icon: User, path: "/profile-doctor" },
 ]
 
 const bottomItems = [
-  { title: "Settings", icon: Settings },
-  { title: "Support", icon: HelpCircle },
+  { title: "Settings", icon: Settings, path: "/settings" },
+  { title: "Support", icon: HelpCircle, path: "/support" },
 ]
 
 export function AppSidebar() {
@@ -37,7 +39,7 @@ export function AppSidebar() {
       <SidebarHeader className="bg-primary">
         <div className="space-y-1">
           <div className="text-lg font-bold text-white">Healthia</div>
-          <div className="text-xs font-semibold tracking-widest text-emerald-200">
+          <div className="text-xs font-semibold tracking-widest text-white">
             CLINICAL MANAGEMENT
           </div>
         </div>
@@ -55,10 +57,10 @@ export function AppSidebar() {
                       : "text-emerald-100 hover:bg-emerald-800/50 hover:text-white"
                   }`}
                 >
-                  <a href="#" className="flex items-center gap-3">
+                  <Link to={item.path} className="flex items-center gap-3">
                     <item.icon className="h-5 w-5" />
                     <span className="text-sm font-medium">{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
@@ -74,10 +76,10 @@ export function AppSidebar() {
                   asChild
                   className="h-10 text-emerald-100 hover:bg-emerald-800/50 hover:text-white"
                 >
-                  <a href="#" className="flex items-center gap-3">
+                  <Link to={item.path} className="flex items-center gap-3">
                     <item.icon className="h-5 w-5" />
                     <span className="text-sm font-medium">{item.title}</span>
-                  </a>
+                  </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             ))}
