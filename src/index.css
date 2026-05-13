@@ -128,3 +128,10 @@
     @apply font-sans;
     }
 }
+
+body{
+    font-family: "Manrope", sans-serif;
+}
+.plus-jakarta {
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
