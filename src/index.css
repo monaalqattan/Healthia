@@ -1,4 +1,4 @@
-@import "tailwindcss";
+ @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
@@ -127,4 +127,11 @@
   html {
     @apply font-sans;
     }
+}
+
+body{
+    font-family: "Manrope", sans-serif;
+}
+.plus-jakarta {
+  font-family: "Plus Jakarta Sans", sans-serif;
 }

@@ -1,8 +1,20 @@
 {
-  "name": "Healthia",
-  "private": true,
+  "name": "healthia",
   "version": "0.0.1",
+  "private": true,
+  "description": "This is a template for a new Vite project with React, TypeScript, and shadcn/ui.",
+  "homepage": "https://github.com/monaalqattan/Healthia#readme",
+  "bugs": {
+    "url": "https://github.com/monaalqattan/Healthia/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/monaalqattan/Healthia.git"
+  },
+  "license": "ISC",
+  "author": "",
   "type": "module",
+  "main": "eslint.config.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -18,9 +30,10 @@
     "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.8.0",
+    "lucide-react": "^1.14.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.4",
     "react-router": "^7.15.0",
     "shadcn": "^4.2.0",
