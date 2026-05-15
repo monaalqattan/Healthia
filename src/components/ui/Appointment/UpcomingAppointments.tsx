@@ -14,14 +14,14 @@ const appointments: Appointment[] = [
   {
     id: 1,
     time: "9:00", period: "AM",
-    name: "Sarah Jenkins", type: "Initial Consult",
+    name: "manar rabie", type: "Initial Consult",
     status: "start",
     avatar: "https://i.pravatar.cc/40?img=47",
   },
   {
     id: 2,
     time: "10:30", period: "AM",
-    name: "Elias Henderson", type: "Follow-up",
+    name: "mohamed rabie", type: "Follow-up",
     status: "review",
     avatar: "https://i.pravatar.cc/40?img=11",
   },
