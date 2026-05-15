@@ -6,29 +6,8 @@ import PatientProfile from "./pages/PatientProfile/PatientProfile"
 import Appointment from "./pages/Appointment/Appointment"
 import Analytics from "./pages/Analytics/Analytics"
 import ProfileDoctor from "./pages/ProfileDoctor/ProfileDoctor"
- import Login from "./pages/Login/Login"
- import NewPassword from "./pages/NewPassword/NewPassword"
-  import ResetPassword from "./pages/ResetPassword/ResetPassword"
-
 
 export const router = createBrowserRouter([
-   {
-    path: "/login",
-    element: <Login />,
-  },
-   {
-    path: "/new-password",
-    element: <NewPassword />,
-  },
-   {
-    path: "/reset-password",
-    element: <ResetPassword />,
-  },
-
-
-
-
-
   {
     path: "/",
     element: <MainLayout />,
@@ -52,6 +31,10 @@ export const router = createBrowserRouter([
       {
         path: "analytics",
         element: <Analytics />,
+      },
+      {
+        path: "profile-doctor",
+        element: <ProfileDoctor />,
       },
       {
         path: "profile-doctor",
