@@ -1,8 +1,20 @@
 {
-  "name": "Healthia",
-  "private": true,
+  "name": "healthia",
   "version": "0.0.1",
+  "private": true,
+  "description": "This is a template for a new Vite project with React, TypeScript, and shadcn/ui.",
+  "homepage": "https://github.com/monaalqattan/Healthia#readme",
+  "bugs": {
+    "url": "https://github.com/monaalqattan/Healthia/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/monaalqattan/Healthia.git"
+  },
+  "license": "ISC",
+  "author": "",
   "type": "module",
+  "main": "eslint.config.js",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -14,13 +26,17 @@
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.8",
     "@tailwindcss/vite": "^4.2.1",
+    "@tanstack/react-table": "^8.21.3",
+    "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.8.0",
+    "lucide-react": "^1.14.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.4",
+    "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.4",
     "react-router": "^7.15.0",
+    "react-router-dom": "^7.15.0",
     "shadcn": "^4.2.0",
     "tailwind-merge": "^3.5.0",
     "tailwindcss": "^4.2.1",
@@ -31,6 +47,7 @@
     "@types/node": "^24.12.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@types/react-router-dom": "^5.3.3",
     "@vitejs/plugin-react": "^5.2.0",
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",

@@ -37,9 +37,15 @@ export const router = createBrowserRouter([
         path: "profile-doctor",
         element: <ProfileDoctor />,
       },
+<<<<<<< HEAD
        {
         path: "add-plan",
         element: <AddPlan />,
+=======
+      {
+        path: "profile-doctor",
+        element: <ProfileDoctor />,
+>>>>>>> 9b8787869423aa2145de3e0a7f0b19ca6b7731e6
       },
     ],
   },
