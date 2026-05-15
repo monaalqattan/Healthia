@@ -4,9 +4,9 @@ import React from 'react';
 import type { Patient } from '../types';
 
 const mockPatients: Patient[] = [
-  { id: '#PT-9221', name: 'Julian Rivers',  lastCheckIn: 'Oct 24, 10:45 AM', planStatus: 'active',    compliance: 95 },
-  { id: '#PT-9805', name: 'Sarah Jenkins',  lastCheckIn: 'Oct 24, 09:15 AM', planStatus: 'on-review', compliance: 93 },
-  { id: '#PT-7719', name: 'David Chen',     lastCheckIn: 'Oct 23, 04:30 PM', planStatus: 'lapsed',    compliance: 20 },
+  { id: '#PT-9221', name: 'nour ahmed',  lastCheckIn: 'Oct 24, 10:45 AM', planStatus: 'active',    compliance: 95 },
+  { id: '#PT-9805', name: 'manar rabie',  lastCheckIn: 'Oct 24, 09:15 AM', planStatus: 'on-review', compliance: 93 },
+  { id: '#PT-7719', name: 'mona ahmed',     lastCheckIn: 'Oct 23, 04:30 PM', planStatus: 'lapsed',    compliance: 20 },
 ];
 
 const statusConfig: Record<Patient['planStatus'], { bg: string; text: string; label: string }> = {
