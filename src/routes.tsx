@@ -6,6 +6,7 @@ import PatientProfile from "./pages/PatientProfile/PatientProfile"
 import Appointment from "./pages/Appointment/Appointment"
 import Analytics from "./pages/Analytics/Analytics"
 import ProfileDoctor from "./pages/ProfileDoctor/ProfileDoctor"
+import AddPlan from "./pages/Addplan/AddPlan"
 
 export const router = createBrowserRouter([
   {
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
       {
         path: "profile-doctor",
         element: <ProfileDoctor />,
+      },
+       {
+        path: "add-plan",
+        element: <AddPlan />,
       },
     ],
   },
