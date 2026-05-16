@@ -8,6 +8,18 @@ import Analytics from "./pages/Analytics/Analytics"
 import ProfileDoctor from "./pages/ProfileDoctor/ProfileDoctor"
 
 export const router = createBrowserRouter([
+   {
+    path: "/login",
+    element: <Login />,
+  },
+   {
+    path: "/new-password",
+    element: <NewPassword />,
+  },
+   {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
   {
     path: "/",
     element: <MainLayout />,
