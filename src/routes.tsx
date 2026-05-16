@@ -6,6 +6,7 @@ import PatientProfile from "./pages/PatientProfile/PatientProfile"
 import Appointment from "./pages/Appointment/Appointment"
 import Analytics from "./pages/Analytics/Analytics"
 import ProfileDoctor from "./pages/ProfileDoctor/ProfileDoctor"
+import PatientProfileTable from "./pages/Patients/Patients"
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +19,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "patients",
-        element: <DashboardPatients />,
+        element: <PatientProfileTable />,
       },
       {
         path: "patientProfile",
