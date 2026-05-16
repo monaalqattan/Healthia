@@ -20,7 +20,7 @@ export default function PatientProfile() {
       {/* Header */}
       <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center mb-4">
         <div>
-          <p className="text-sm text-gray-400 mb-1">Patients › Sarah Jenkins</p>
+          <p className="text-sm text-gray-400 mb-1">Patients › manaar rabie</p>
           <h1 className="text-xl md:text-2xl font-bold text-gray-800">Patient Progress</h1>
         </div>
         <div className="flex gap-3">
