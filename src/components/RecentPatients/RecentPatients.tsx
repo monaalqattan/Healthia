@@ -1,4 +1,3 @@
-// Dashboard/RecentPatients.tsx
 
 import React from 'react';
 import type { Patient } from '../types';
@@ -25,7 +24,6 @@ const RecentPatients: React.FC = () => {
   return (
     <div className="bg-white rounded-xl p-4 md:p-5 shadow-sm relative mt-4 md:mt-6">
 
-      {/* Header — على موبايل: عمود، على sm: صف */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-4">
         <div>
           <h3 className="text-base font-bold text-gray-800">Recent Patients</h3>
@@ -38,7 +36,6 @@ const RecentPatients: React.FC = () => {
         </button>
       </div>
 
-      {/* overflow-x-auto عشان الجدول يتسكرول على موبايل */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm border-collapse min-w-[580px]">
           <thead>
@@ -83,11 +80,6 @@ const RecentPatients: React.FC = () => {
           </tbody>
         </table>
       </div>
-
-      {/* FAB Button */}
-      <button className="fixed bottom-4 right-4 md:bottom-6 md:right-6 bg-[#2d6a4f] text-white font-semibold text-xs md:text-sm px-4 py-2.5 md:px-5 md:py-3 rounded-full shadow-lg hover:bg-[#40916c] transition-colors">
-        + Add New Patient
-      </button>
 
     </div>
   );
