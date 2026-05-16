@@ -6,7 +6,7 @@ import PatientProfile from "./pages/PatientProfile/PatientProfile"
 import Appointment from "./pages/Appointment/Appointment"
 import Analytics from "./pages/Analytics/Analytics"
 import ProfileDoctor from "./pages/ProfileDoctor/ProfileDoctor"
-import AddPlan from "./pages/Addplan/Addplan"
+import AddPlan from "./pages/AddPlan/AddPlan"
 
 export const router = createBrowserRouter([
   {
