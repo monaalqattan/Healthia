@@ -10,6 +10,8 @@ import AddPlan from "./pages/Addplan/Addplan"
 
 export const router = createBrowserRouter([
   {
+
+    
     path: "/",
     element: <MainLayout />,
     children: [
