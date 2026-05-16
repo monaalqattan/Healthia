@@ -26,7 +26,7 @@ const NetworkVitalityCard: React.FC = () => {
       </div>
       </div>
 
-      <div className="flex gap-3">
+      <div className="flex gap-3 flex-wrap">
         <button className="bg-[#A5F4B9] text-[#2d6a4f] font-semibold text-sm px-4 py-2 rounded-full hover:bg-white/90 transition-colors cursor-poin flex items-center gap-2">
           <BadgeCheck /> 
           <span>Run Full Audit</span>
