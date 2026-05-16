@@ -4,6 +4,7 @@
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/geist";
 
+
 /* 2. المتغيرات والـ Variants */
 @custom-variant dark (&:is(.dark *));
 
@@ -15,6 +16,18 @@
     --color-background: oklch(1 0 0);
     --color-foreground: oklch(0.145 0 0);
     /* ... باقي الألوان الخاصة بكِ ... */
+   
+  /* الألوان الموجودة عندك ... */
+
+  /* ← أضيفي ده هنا */
+  --g50:  #f0faf4;
+  --g100: #c6e8d5;
+  --g200: #8dd4ae;
+  --g400: #2d9e6b;
+  --g600: #1a6b48;
+  --g800: #0d3d28;
+  --border-addplan: #e4ede8;
+
 }
 
 :root {
