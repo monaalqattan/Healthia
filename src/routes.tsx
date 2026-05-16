@@ -1,17 +1,30 @@
 import { createBrowserRouter } from "react-router"
 import MainLayout from "@/layouts/MainLayout.tsx"
 import DashboardDoctor from "./pages/DashboardDoctor/DashboardDoctor"
-import DashboardPatients from "./pages/DashboardPatients/DashboardPatients"
 import PatientProfile from "./pages/PatientProfile/PatientProfile"
 import Appointment from "./pages/Appointment/Appointment"
 import Analytics from "./pages/Analytics/Analytics"
 import ProfileDoctor from "./pages/ProfileDoctor/ProfileDoctor"
+import PatientProfileTable from "./pages/Patients/Patients"
 import AddPlan from "./pages/AddPlan/AddPlan"
+import Login from "./pages/Login/Login"
+import NewPassword from "./pages/NewPassword/NewPassword"
+import ResetPassword from "./pages/ResetPassword/ResetPassword"
 
 export const router = createBrowserRouter([
   {
-
-    
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/new-password",
+    element: <NewPassword />,
+  },
+  {
+    path: "/reset-password",
+    element: <ResetPassword />,
+  },
+  {
     path: "/",
     element: <MainLayout />,
     children: [
@@ -21,7 +34,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "patients",
-        element: <DashboardPatients />,
+        element: <PatientProfileTable />,
       },
       {
         path: "patientProfile",
@@ -39,7 +52,7 @@ export const router = createBrowserRouter([
         path: "profile-doctor",
         element: <ProfileDoctor />,
       },
-       {
+      {
         path: "add-plan",
         element: <AddPlan />,
       },
