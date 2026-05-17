@@ -9,6 +9,8 @@ import { PAGE_TABS } from "../../components/addplan/features/constants";
 import { INITIAL_FORM, INITIAL_TARGETS, INITIAL_MEALS } from "../../components/addplan/features/data";
 import { computeTargets } from "../../components/addplan/features/logic/calculations";
 import { selectTotalEaten } from "../../components/addplan/features/logic/selectors";
+import Navbar from "@/components/Navbar/Navbar";
+import Footer from "@/components/footer/Footer";
 
 export default function AddPlan() {
   const [activeTab, setActiveTab] = useState<string>("Nutritional Goals");
@@ -49,37 +51,60 @@ export default function AddPlan() {
   }, []);
 
   return (
-    <div className="addplan-page">
-
-      {/* Topbar */}
-      <div className="topbar">
-        <span className="topbar-title">Clinical Diet Planner</span>
-        <div className="topbar-tabs">
-          {PAGE_TABS.map((t) => (
-            <button key={t} className={`tab-btn ${activeTab === t ? "active" : ""}`}
-              onClick={() => setActiveTab(t)}>{t}</button>
-          ))}
+    <>
+      <Navbar />
+      <div className="addplan-page pt-6">
+        {/* Topbar */}
+        <div className="topbar">
+          <span className="topbar-title">Clinical Diet Planner</span>
+          <div className="topbar-tabs">
+            {PAGE_TABS.map((t) => (
+              <button
+                key={t}
+                className={`tab-btn ${activeTab === t ? "active" : ""}`}
+                onClick={() => setActiveTab(t)}
+              >
+                {t}
+              </button>
+            ))}
+          </div>
+          <div className="topbar-actions">
+            <button className="btn-outline">Export PDF</button>
+            <button className="btn-primary">Save &amp; Publish</button>
+          </div>
         </div>
-        <div className="topbar-actions">
-          <button className="btn-outline">Export PDF</button>
-          <button className="btn-primary">Save &amp; Publish</button>
+
+        {/* Patient Bar */}
+        <PatientBar
+          firstName={form.firstName}
+          lastName={form.lastName}
+          weight={form.weight}
+          height={form.height}
+          goal={form.goal}
+        />
+
+        {/* Content */}
+        <div className="content-grid">
+          <DietCalculator
+            form={form}
+            onFormChange={handleFormChange}
+            equation={equation}
+            onEqChange={setEquation}
+            onCalculate={handleCalculate}
+            targets={targets}
+          />
+
+          <MealStructure
+            meals={meals}
+            onAddFood={handleAddFood}
+            onAddMeal={handleAddMeal}
+            targets={targets}
+            totalEaten={totalEaten}
+          />
         </div>
       </div>
-
-      {/* Patient Bar */}
-      <PatientBar firstName={form.firstName} lastName={form.lastName}
-        weight={form.weight} height={form.height} goal={form.goal} />
-
-      {/* Content */}
-      <div className="content-grid">
-        <DietCalculator form={form} onFormChange={handleFormChange}
-          equation={equation} onEqChange={setEquation}
-          onCalculate={handleCalculate} targets={targets} />
-
-        <MealStructure meals={meals} onAddFood={handleAddFood}
-          onAddMeal={handleAddMeal} targets={targets} totalEaten={totalEaten} />
-      </div>
-    </div>
-  );
+      <Footer />
+    </>
+  )
 }
 

@@ -2,6 +2,7 @@ import { useState } from "react"
 import WeeklySchedule from "../../components/ui/Appointment/WeeklySchedule"
 import UpcomingAppointments from "../../components/ui/Appointment/UpcomingAppointments"
 import ManageAvailability from "../../components/ui/Appointment/ManageAvailability"
+import Navbar from "@/components/Navbar/Navbar"
 
 // نوع الـ Appointment
 export interface AppointmentType {
@@ -56,54 +57,57 @@ export default function Appointment() {
   }
 
   return (
-    <div className="p-4 md:p-6 bg-gray-50 min-h-full w-full">
-
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6">
-        <div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Schedule</h1>
-          <p className="text-sm text-gray-400 mt-1">
-            Manage your upcoming appointments and availability.
-          </p>
+    <>
+      <Navbar />
+      <div className="min-h-full w-full bg-gray-50 p-4 md:p-6">
+        {/* Header */}
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-800 md:text-3xl">
+              Schedule
+            </h1>
+            <p className="mt-1 text-sm text-gray-400">
+              Manage your upcoming appointments and availability.
+            </p>
+          </div>
+          {/* Prev / Next - بيغير الـ weekOffset */}
+          <div className="flex gap-2 self-start">
+            <button
+              onClick={() => setWeekOffset((w) => w - 1)}
+              className="flex cursor-pointer items-center gap-1 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600 transition-all hover:bg-gray-100"
+            >
+              ‹ Prev
+            </button>
+            <button
+              onClick={() => setWeekOffset((w) => w + 1)}
+              className="flex cursor-pointer items-center gap-1 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm text-gray-600 transition-all hover:bg-gray-100"
+            >
+              Next ›
+            </button>
+          </div>
         </div>
-        {/* Prev / Next - بيغير الـ weekOffset */}
-        <div className="flex gap-2 self-start">
-          <button
-            onClick={() => setWeekOffset((w) => w - 1)}
-            className="flex items-center gap-1 border border-gray-200 bg-white rounded-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-all cursor-pointer"
-          >
-            ‹ Prev
-          </button>
-          <button
-            onClick={() => setWeekOffset((w) => w + 1)}
-            className="flex items-center gap-1 border border-gray-200 bg-white rounded-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-all cursor-pointer"
-          >
-            Next ›
-          </button>
-        </div>
-      </div>
 
-      {/* Weekly Schedule */}
-      <WeeklySchedule
-        selectedDay={selectedDay}
-        onSelectDay={setSelectedDay}
-        weekOffset={weekOffset}
-        appointments={appointments}
-      />
-
-      {/* Main Content */}
-      <div
-        className="mt-4 flex flex-col gap-4 lg:grid lg:gap-4"
-        style={{ gridTemplateColumns: "1fr 380px" }}
-      >
-        <UpcomingAppointments
-          appointments={appointments.filter((a) => a.day === selectedDay)}
+        {/* Weekly Schedule */}
+        <WeeklySchedule
           selectedDay={selectedDay}
-          onAddAppointment={addAppointment}
+          onSelectDay={setSelectedDay}
+          weekOffset={weekOffset}
+          appointments={appointments}
         />
-        <ManageAvailability />
-      </div>
 
-    </div>
+        {/* Main Content */}
+        <div
+          className="mt-4 flex flex-col gap-4 lg:grid lg:gap-4"
+          style={{ gridTemplateColumns: "1fr 380px" }}
+        >
+          <UpcomingAppointments
+            appointments={appointments.filter((a) => a.day === selectedDay)}
+            selectedDay={selectedDay}
+            onAddAppointment={addAppointment}
+          />
+          <ManageAvailability />
+        </div>
+      </div>
+    </>
   )
 }
