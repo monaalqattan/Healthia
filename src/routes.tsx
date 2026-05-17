@@ -15,11 +15,8 @@ import PatientLayout from "./layouts/PatientLayout"
 import Patients from "./pages/Patients/Patients"
 import DashboardPatients from "./pages/DashboardPatients/DashboardPatients"
 import PatientProfile from "./pages/PatientProfile/PatientProfile"
-import PatientDashboard from "./pages/CLIENT-SIDE/PatientDashboard"
-import MealPlan from "./pages/CLIENT-SIDE/Meal-Plan"
-import Tracking from "./pages/CLIENT-SIDE/Tracking"
-import ClientProfile from "./pages/CLIENT-SIDE/Client-Profile"
-import BookAppointment from "./pages/CLIENT-SIDE/BookAppointment"
+import BookAppointment from "./pages/BookAppointment/BookAppointment"
+import AppointmentSuccess from "./pages/AppointmentSuccess/AppointmentSuccess"
 
 
 export const router = createBrowserRouter([
@@ -71,6 +68,12 @@ export const router = createBrowserRouter([
         path: "add-plan",
         element: <AddPlan />,
       },
+      { path: "book-appointment", 
+        element: <BookAppointment />   },
+        {
+    path: "/appointment-success",
+    element: <AppointmentSuccess />,
+  }
     ],
   },
   {
