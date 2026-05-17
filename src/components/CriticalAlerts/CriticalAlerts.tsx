@@ -43,12 +43,11 @@ const AlertItem: React.FC<{ alert: Alert }> = ({ alert }) => (
 
 const CriticalAlerts: React.FC = () => {
   return (
-    <div className="bg-white rounded-xl p-4 shadow-sm">
-
+    <div className="mb-6 rounded-[2.5rem] bg-white p-8 shadow-sm">
       {/* Header */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="mb-4 flex items-center justify-between">
         <h3 className="text-sm font-bold text-gray-800">Critical Alerts</h3>
-        <span className="bg-red-500 text-white text-[10px] font-semibold px-2 py-1 rounded-full whitespace-nowrap">
+        <span className="rounded-full bg-red-500 px-2 py-1 text-[10px] font-semibold whitespace-nowrap text-white">
           REQUIRES ACTION
         </span>
       </div>
@@ -57,12 +56,11 @@ const CriticalAlerts: React.FC = () => {
         <AlertItem key={alert.id} alert={alert} />
       ))}
 
-      <button className="text-green-700 text-xs font-medium mt-2 hover:underline">
+      <button className="mt-2 text-xs font-medium text-green-700 hover:underline">
         View All 14 Alerts →
       </button>
-
     </div>
-  );
+  )
 };
 
 export default CriticalAlerts;

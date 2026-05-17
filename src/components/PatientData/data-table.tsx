@@ -87,10 +87,6 @@ export function DataTable<TData, TValue>({
             }
             className="max-w-xs rounded-full border-none bg-gray-50 px-4 focus-visible:ring-emerald-500"
           />
-
-          <button className="flex items-center gap-2 whitespace-nowrap font-bold text-emerald-800 transition-opacity hover:opacity-70">
-            View Complete Directory <span className="text-xl">→</span>
-          </button>
         </div>
       </div>
 
@@ -106,7 +102,7 @@ export function DataTable<TData, TValue>({
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="px-4 py-5 text-[11px] font-bold uppercase tracking-[0.1em] text-gray-400"
+                    className="px-4 py-5 text-[11px] font-bold uppercase tracking-wide text-gray-400"
                   >
                     {header.isPlaceholder
                       ? null

@@ -62,7 +62,7 @@ export default function PatientProfile() {
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 flex-shrink-0">
+        <div className="flex gap-3 shrink-0">
           <button className="flex items-center gap-2 border border-gray-300 rounded-full px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer transition-colors">
             <MessageCircle size={15} className="text-gray-600" />
             Message

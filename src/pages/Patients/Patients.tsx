@@ -112,7 +112,7 @@ export default function Patients() {
       {/* ── Table ── */}
       <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-sm min-w-[640px]">
+          <table className="w-full text-sm min-w-120">
             <thead>
               <tr className="text-left text-xs text-gray-400 bg-gray-50 border-b border-gray-100">
                 <th className="px-5 py-3 font-medium">PATIENT NAME</th>
