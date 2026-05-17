@@ -1,9 +1,11 @@
+// src/pages/Appointment/Appointment.tsx
 import { useState } from "react"
 import WeeklySchedule from "../../components/ui/Appointment/WeeklySchedule"
 import UpcomingAppointments from "../../components/ui/Appointment/UpcomingAppointments"
 import ManageAvailability from "../../components/ui/Appointment/ManageAvailability"
+import type { Session } from "../../store/appointmentStore"
 
-// نوع الـ Appointment
+// ✅ AppointmentType معرّفة هنا بس - مفيش import منها
 export interface AppointmentType {
   id: number
   time: string
@@ -12,53 +14,45 @@ export interface AppointmentType {
   type: string
   status: "start" | "review"
   avatar: string
-  day: number  // ← رقم اليوم عشان نعرض المواعيد حسب اليوم
+  day: number
 }
 
-// البيانات الابتدائية
 const initialAppointments: AppointmentType[] = [
   {
     id: 1, time: "9:00", period: "AM",
     name: "manar rabie", type: "Initial Consult",
-    status: "start", avatar: "https://i.pravatar.cc/40?img=47",
-    day: 17,
+    status: "start", avatar: "https://i.pravatar.cc/40?img=47", day: 17,
   },
   {
     id: 2, time: "10:30", period: "AM",
     name: "mohamed rabie", type: "Follow-up",
-    status: "review", avatar: "https://i.pravatar.cc/40?img=11",
-    day: 17,
+    status: "review", avatar: "https://i.pravatar.cc/40?img=11", day: 17,
   },
 ]
 
 export default function Appointment() {
-  // ── State مشترك بين الكومبوننتات ──
-
-  // قائمة المواعيد - بتتشارك مع UpcomingAppointments
   const [appointments, setAppointments] = useState<AppointmentType[]>(initialAppointments)
-
-  // اليوم المختار - بيتشارك بين WeeklySchedule و UpcomingAppointments
   const [selectedDay, setSelectedDay] = useState(17)
-
-  // رقم الأسبوع للـ Prev/Next
   const [weekOffset, setWeekOffset] = useState(0)
 
-  // دالة إضافة appointment جديد - بتتبعت لـ UpcomingAppointments
   const addAppointment = (newAppt: Omit<AppointmentType, "id" | "avatar">) => {
     setAppointments((prev) => [
       ...prev,
       {
         ...newAppt,
-        id: Date.now(),  // id فريد بناءً على الوقت
+        id: Date.now(),
         avatar: `https://i.pravatar.cc/40?img=${Math.floor(Math.random() * 70)}`,
       },
     ])
   }
 
+  // ✅ مفيش useState للـ sessions هنا - بس بنحفظها في localStorage
+  const handleSessionsChange = (newSessions: Session[]) => {
+    localStorage.setItem("doctorSessions", JSON.stringify(newSessions))
+  }
+
   return (
     <div className="p-4 md:p-6 bg-gray-50 min-h-full w-full">
-
-      {/* Header */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 mb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Schedule</h1>
@@ -66,7 +60,6 @@ export default function Appointment() {
             Manage your upcoming appointments and availability.
           </p>
         </div>
-        {/* Prev / Next - بيغير الـ weekOffset */}
         <div className="flex gap-2 self-start">
           <button
             onClick={() => setWeekOffset((w) => w - 1)}
@@ -83,7 +76,6 @@ export default function Appointment() {
         </div>
       </div>
 
-      {/* Weekly Schedule */}
       <WeeklySchedule
         selectedDay={selectedDay}
         onSelectDay={setSelectedDay}
@@ -91,7 +83,6 @@ export default function Appointment() {
         appointments={appointments}
       />
 
-      {/* Main Content */}
       <div
         className="mt-4 flex flex-col gap-4 lg:grid lg:gap-4"
         style={{ gridTemplateColumns: "1fr 380px" }}
@@ -101,9 +92,8 @@ export default function Appointment() {
           selectedDay={selectedDay}
           onAddAppointment={addAppointment}
         />
-        <ManageAvailability />
+        <ManageAvailability onSessionsChange={handleSessionsChange} />
       </div>
-
     </div>
   )
 }

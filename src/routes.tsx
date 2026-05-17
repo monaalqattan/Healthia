@@ -10,6 +10,8 @@ import AddPlan from "./pages/AddPlan/AddPlan"
 import Login from "./pages/Login/Login"
 import NewPassword from "./pages/NewPassword/NewPassword"
 import ResetPassword from "./pages/ResetPassword/ResetPassword"
+import BookAppointment from "./pages/BookAppointment/BookAppointment"
+import AppointmentSuccess from "./pages/AppointmentSuccess/AppointmentSuccess"
 
 export const router = createBrowserRouter([
   {
@@ -56,6 +58,11 @@ export const router = createBrowserRouter([
         path: "add-plan",
         element: <AddPlan />,
       },
+      { path: "book-appointment", element: <BookAppointment />   },
     ],
+  },
+  {
+    path: "/appointment-success",
+    element: <AppointmentSuccess />,
   },
 ])
