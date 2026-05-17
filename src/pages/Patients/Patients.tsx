@@ -1,9 +1,12 @@
 import { DataTable } from "@/components/PatientData/data-table"
 import { columns, type DataType } from "@/components/PatientData/columns"
 import { Button } from "@/components/ui/button"
+import { useState } from "react"
+import { AddPatientModal } from "@/components/PatientData/AddPatientModal"
+import Navbar from "@/components/Navbar/Navbar"
 
 function PatientProfileTable() {
-//   // PatientProfile.tsx
+  const [modalOpen, setModalOpen] = useState(false)
   const data: DataType[] = [
     {
       id: "1",
@@ -60,22 +63,24 @@ function PatientProfileTable() {
     }
   ]
   return (
-    <div className="p-6">
-      <DataTable columns={columns} data={data} />
-      <Button variant="hamada">Add New Patient</Button>
-    </div>
+    <>
+        <Navbar />
+      <div className="min-h-full w-full bg-gray-50 p-10 md:p-6 ">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-col gap-1">
+            <h1 className="text-2xl font-bold">Patients</h1>
+            <p className="text-muted-foreground text-sm">
+              Manage your patient profiles and track their progress.
+            </p>
+          </div>
+        </div>
+        <DataTable columns={columns} data={data} />
+        <Button variant="hamada" onClick={() => setModalOpen(true)} className="m-3 p-6 rounded-full text-[100%]">
+          Add New Patient
+        </Button>
+        <AddPatientModal open={modalOpen} onClose={() => setModalOpen(false)} />
+      </div>
+    </>
   )
 }
-
 export default PatientProfileTable
-
-// import RecentPatients from "@/components/RecentPatients/RecentPatients"
-// function Patients() {
-//   return (
-//     <div>
-//       <RecentPatients />
-//     </div>
-//   )
-// }
-
-// export default Patients
