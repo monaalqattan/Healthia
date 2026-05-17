@@ -48,9 +48,10 @@ export const router = createBrowserRouter([
       //   path: "patientProfile",
       //   element: <PatientProfile />,
       // },
-      { path: "patients",               element: <Patients />          },
-      { path: "dashboardPatients",      element: <DashboardPatients /> },
-      { path: "patientProfile",         element: <PatientProfile />    },
+      { path: "patients", element: <Patients /> },
+
+      { path: "dashboardPatients", element: <DashboardPatients /> },
+      { path: "patientProfile", element: <PatientProfile /> },
       {
         path: "appointments",
         element: <Appointment />,
@@ -81,7 +82,23 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <PatientProfile />,
+        element: <PatientDashboard />,
+      },
+      {
+        path: "meal-plan",
+        element: <MealPlan />,
+      },
+      {
+        path: "tracking",
+        element: <Tracking />,
+      },
+      {
+        path: "patient-profile",
+        element: <ClientProfile />,
+      },
+      {
+        path: "book-appointment",
+        element: <BookAppointment />,
       },
     ],
   },
