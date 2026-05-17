@@ -109,6 +109,7 @@ export default function AppointmentCalendar({
         }}
         value={selectedDate}
         minDate={new Date()}
+        locale="en-US"
       />
     </div>
   )
