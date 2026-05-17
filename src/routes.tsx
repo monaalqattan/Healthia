@@ -15,6 +15,8 @@ import PatientLayout from "./layouts/PatientLayout"
 import Patients from "./pages/Patients/Patients"
 import DashboardPatients from "./pages/DashboardPatients/DashboardPatients"
 import PatientProfile from "./pages/PatientProfile/PatientProfile"
+import BookAppointment from "./pages/BookAppointment/BookAppointment"
+import AppointmentSuccess from "./pages/AppointmentSuccess/AppointmentSuccess"
 
 
 export const router = createBrowserRouter([
@@ -65,6 +67,12 @@ export const router = createBrowserRouter([
         path: "add-plan",
         element: <AddPlan />,
       },
+      { path: "book-appointment", 
+        element: <BookAppointment />   },
+        {
+    path: "/appointment-success",
+    element: <AppointmentSuccess />,
+  }
     ],
   },
   {
