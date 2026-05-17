@@ -15,6 +15,11 @@ import PatientLayout from "./layouts/PatientLayout"
 import Patients from "./pages/Patients/Patients"
 import DashboardPatients from "./pages/DashboardPatients/DashboardPatients"
 import PatientProfile from "./pages/PatientProfile/PatientProfile"
+import PatientDashboard from "./pages/CLIENT-SIDE/PatientDashboard"
+import MealPlan from "./pages/CLIENT-SIDE/Meal-Plan"
+import Tracking from "./pages/CLIENT-SIDE/Tracking"
+import ClientProfile from "./pages/CLIENT-SIDE/Client-Profile"
+import BookAppointment from "./pages/CLIENT-SIDE/BookAppointment"
 
 
 export const router = createBrowserRouter([
@@ -46,9 +51,10 @@ export const router = createBrowserRouter([
       //   path: "patientProfile",
       //   element: <PatientProfile />,
       // },
-      { path: "patients",               element: <Patients />          },
-      { path: "dashboardPatients",      element: <DashboardPatients /> },
-      { path: "patientProfile",         element: <PatientProfile />    },
+      { path: "patients", element: <Patients /> },
+
+      { path: "dashboardPatients", element: <DashboardPatients /> },
+      { path: "patientProfile", element: <PatientProfile /> },
       {
         path: "appointments",
         element: <Appointment />,
@@ -73,7 +79,23 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <PatientProfile />,
+        element: <PatientDashboard />,
+      },
+      {
+        path: "meal-plan",
+        element: <MealPlan />,
+      },
+      {
+        path: "tracking",
+        element: <Tracking />,
+      },
+      {
+        path: "patient-profile",
+        element: <ClientProfile />,
+      },
+      {
+        path: "book-appointment",
+        element: <BookAppointment />,
       },
     ],
   },
