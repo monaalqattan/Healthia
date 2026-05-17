@@ -5,7 +5,8 @@ import UpcomingAppointments from "../../components/ui/Appointment/UpcomingAppoin
 import ManageAvailability from "../../components/ui/Appointment/ManageAvailability"
 import type { Session } from "../../store/appointmentStore"
 
-// ✅ AppointmentType معرّفة هنا بس - مفيش import منها
+// ✅ شلنا import Navbar لأنه مش مستخدم
+
 export interface AppointmentType {
   id: number
   time: string
@@ -46,7 +47,6 @@ export default function Appointment() {
     ])
   }
 
-  // ✅ مفيش useState للـ sessions هنا - بس بنحفظها في localStorage
   const handleSessionsChange = (newSessions: Session[]) => {
     localStorage.setItem("doctorSessions", JSON.stringify(newSessions))
   }
@@ -87,6 +87,7 @@ export default function Appointment() {
         className="mt-4 flex flex-col gap-4 lg:grid lg:gap-4"
         style={{ gridTemplateColumns: "1fr 380px" }}
       >
+        {/* ✅ شلنا الـ props المكررة: onSelectDay, weekOffset, appointments التانية */}
         <UpcomingAppointments
           appointments={appointments.filter((a) => a.day === selectedDay)}
           selectedDay={selectedDay}
