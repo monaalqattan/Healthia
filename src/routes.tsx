@@ -17,12 +17,10 @@ import DashboardPatients from "./pages/DashboardPatients/DashboardPatients"
 import PatientProfile from "./pages/PatientProfile/PatientProfile"
 import BookAppointment from "./pages/BookAppointment/BookAppointment"
 import AppointmentSuccess from "./pages/AppointmentSuccess/AppointmentSuccess"
-
 import PatientDashboard from "./pages/CLIENT-SIDE/PatientDashboard"
 import MealPlan from "./pages/CLIENT-SIDE/Meal-Plan"
 import Tracking from "./pages/CLIENT-SIDE/Tracking"
 import ClientProfile from "./pages/CLIENT-SIDE/Client-Profile"
-
 
 export const router = createBrowserRouter([
   {
