@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import {
   type ColumnDef,
@@ -12,175 +10,160 @@ import {
   getFilteredRowModel,
   useReactTable,
 } from "@tanstack/react-table"
+import { Search, ChevronLeft, ChevronRight } from "lucide-react"
+import type { PatientRecord } from "@/store/patientsStore"
 
-import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+interface DataTableProps {
+  data:          PatientRecord[]
+  columns:       ColumnDef<PatientRecord>[]
+  onRowClick?:   (patient: PatientRecord) => void
+  pageSize?:     number
+  showSearch?:   boolean
+  showHeader?:   boolean   // عنوان Recent Patients
+  onAddPatient?: () => void
 }
 
-export function DataTable<TData, TValue>({
-  columns,
+export function DataTable({
   data,
-}: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([])
+  columns,
+  onRowClick,
+  pageSize    = 5,
+  showSearch  = true,
+  showHeader  = false,
+  onAddPatient,
+}: DataTableProps) {
+  const [sorting,       setSorting]       = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
-  const [rowSelection, setRowSelection] = React.useState({})
-  
-  // 1. إضافة State خاصة بالـ Pagination لضمان التحكم الكامل
-  const [pagination, setPagination] = React.useState({
-    pageIndex: 0,
-    pageSize: 5, // عدد الصفوف في كل صفحة
-  })
+  const [pagination,    setPagination]    = React.useState({ pageIndex: 0, pageSize })
 
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
+    getCoreRowModel:       getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    onSortingChange: setSorting,
+    getSortedRowModel:     getSortedRowModel(),
+    getFilteredRowModel:   getFilteredRowModel(),
+    onSortingChange:       setSorting,
     onColumnFiltersChange: setColumnFilters,
-    onRowSelectionChange: setRowSelection,
-    
-    // 2. ربط الـ State بالجدول
-    onPaginationChange: setPagination,
-    state: {
-      sorting,
-      columnFilters,
-      rowSelection,
-      pagination, // تفعيل الـ State هنا
-    },
+    onPaginationChange:    setPagination,
+    state: { sorting, columnFilters, pagination },
   })
 
   return (
-    <div className="rounded-[2.5rem] border border-gray-100 bg-white p-8 shadow-sm">
-      {/* Header Section */}
-      <div className="mb-8 flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-        <div>
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Recent Patients
-          </h2>
-          <p className="mt-1 text-sm text-gray-400">
-            Managing the most recent interactions and record updates.
-          </p>
-        </div>
+    <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
 
-        <div className="flex items-center gap-6">
-          <Input
-            placeholder="Search patients..."
-            value={
-              (table.getColumn("patientName")?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn("patientName")?.setFilterValue(event.target.value)
-            }
-            className="max-w-xs rounded-full border-none bg-gray-50 px-4 focus-visible:ring-emerald-500"
-          />
+      {/* Header — بيظهر بس لو showHeader=true */}
+      {showHeader && (
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-5 pt-5 pb-3">
+          <div>
+            <h2 className="text-xl font-bold text-gray-800">Recent Patients</h2>
+            <p className="text-xs text-gray-400 mt-0.5">Managing the most recent interactions and record updates.</p>
+          </div>
+          {showSearch && (
+            <div className="relative">
+              <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <input
+                placeholder="Search patients..."
+                value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+                onChange={e => table.getColumn("name")?.setFilterValue(e.target.value)}
+                className="pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-full bg-gray-50 outline-none focus:border-green-400 w-44"
+              />
+            </div>
+          )}
         </div>
-      </div>
+      )}
 
-      {/* Table Container */}
-      <div className="overflow-hidden">
-        <Table>
-          <TableHeader className="border-none bg-[#F8F9FA]">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow
-                key={headerGroup.id}
-                className="border-none hover:bg-transparent"
-              >
-                {headerGroup.headers.map((header) => (
-                  <TableHead
-                    key={header.id}
-                    className="px-4 py-5 text-[11px] font-bold uppercase tracking-wide text-gray-400"
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
+      {/* Search standalone — لو مفيش header */}
+      {!showHeader && showSearch && (
+        <div className="px-5 pt-4">
+          <div className="relative w-fit">
+            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              placeholder="Search patients..."
+              value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+              onChange={e => table.getColumn("name")?.setFilterValue(e.target.value)}
+              className="pl-8 pr-4 py-2 text-sm border border-gray-200 rounded-full bg-gray-50 outline-none focus:border-green-400 w-48"
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Table */}
+      <div className="overflow-x-auto">
+        <table className="w-full text-sm min-w-[580px]">
+          <thead>
+            {table.getHeaderGroups().map(hg => (
+              <tr key={hg.id} className="text-left text-xs text-gray-400 bg-gray-50 border-b border-gray-100">
+                {hg.headers.map(header => (
+                  <th key={header.id} className="px-5 py-3 font-semibold tracking-wide"
+                    onClick={header.column.getToggleSortingHandler()}
+                    style={{ cursor: header.column.getCanSort() ? "pointer" : "default" }}>
+                    <div className="flex items-center gap-1">
+                      {flexRender(header.column.columnDef.header, header.getContext())}
+                      {header.column.getIsSorted() === "asc"  && " ↑"}
+                      {header.column.getIsSorted() === "desc" && " ↓"}
+                    </div>
+                  </th>
                 ))}
-              </TableRow>
+              </tr>
             ))}
-          </TableHeader>
-
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                  className="border-b border-gray-50 transition-colors hover:bg-gray-50/50"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      className="px-4 py-5 text-gray-600"
-                    >
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.length ? (
+              table.getRowModel().rows.map(row => (
+                <tr key={row.id}
+                  className="border-b border-gray-50 hover:bg-gray-50/60 transition-colors cursor-pointer"
+                  onClick={() => onRowClick?.(row.original)}>
+                  {row.getVisibleCells().map(cell => (
+                    <td key={cell.id} className="px-5 py-4">
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
                   ))}
-                </TableRow>
+                </tr>
               ))
             ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-32 text-center text-gray-400"
-                >
-                  No patients found.
-                </TableCell>
-              </TableRow>
+              <tr>
+                <td colSpan={columns.length} className="px-5 py-10 text-center text-gray-400 text-sm">
+                  No patients found
+                </td>
+              </tr>
             )}
-          </TableBody>
-        </Table>
+          </tbody>
+        </table>
       </div>
 
-      {/* Pagination Section */}
-      <div className="mt-8 flex items-center justify-between">
-        <div className="text-sm font-medium text-gray-400">
-          Showing <span className="text-gray-900">{table.getRowModel().rows.length}</span> of{" "}
-          <span className="text-gray-900">{data.length}</span> patients
-        </div>
-        
-        <div className="flex items-center space-x-4">
-          <div className="text-sm text-gray-400">
-            Page {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </div>
-          <div className="flex items-center space-x-2">
-            <button
-              className="rounded-xl border border-gray-100 px-4 py-2 text-sm font-semibold text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-30"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              Previous
-            </button>
-            <button
-              className="rounded-xl border border-gray-100 px-4 py-2 text-sm font-semibold text-gray-600 transition-all hover:bg-gray-50 hover:text-gray-900 disabled:cursor-not-allowed disabled:opacity-30"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              Next
-            </button>
-          </div>
+      {/* Pagination */}
+      <div className="flex items-center justify-between px-5 py-3 border-t border-gray-100">
+        <span className="text-xs text-gray-400">
+          Showing{" "}
+          <strong className="text-gray-700">{table.getRowModel().rows.length}</strong>
+          {" "}of{" "}
+          <strong className="text-gray-700">{data.length}</strong> patients
+        </span>
+        <div className="flex items-center gap-2">
+          <span className="text-xs text-gray-400">
+            Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount() || 1}
+          </span>
+          <button onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}
+            className="p-1 rounded hover:bg-gray-100 disabled:opacity-30">
+            <ChevronLeft size={14} />
+          </button>
+          <button onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}
+            className="p-1 rounded hover:bg-gray-100 disabled:opacity-30">
+            <ChevronRight size={14} />
+          </button>
         </div>
       </div>
+
+      {/* Add Button */}
+      {onAddPatient && (
+        <div className="px-5 pb-5">
+          <button onClick={onAddPatient}
+            className="bg-green-700 text-white font-semibold text-sm px-5 py-2.5 rounded-full shadow-md hover:bg-green-800 transition-colors">
+            + Add New Patient
+          </button>
+        </div>
+      )}
     </div>
   )
 }
