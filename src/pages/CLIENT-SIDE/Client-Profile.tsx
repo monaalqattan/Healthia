@@ -91,7 +91,7 @@ export default function ClientProfile() {
           <div>
             <h1 className="text-2xl font-bold text-gray-950 tracking-tight">{formData.fullName}</h1>
             <div className="flex items-center gap-3 mt-2 flex-wrap">
-              <span className="bg-emerald-800 text-white text-[10px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+              <span className="bg-emerald-800 text-white text-[10px] font-extrabold px-3 py-1 rounded-full  tracking-wider">
                 Goal: Lose 5 kg
               </span>
               <span className="flex items-center gap-1.5 text-xs text-gray-500 font-semibold bg-gray-50 px-2.5 py-1 rounded-full border border-gray-100">
@@ -149,7 +149,7 @@ export default function ClientProfile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               {/* Full Name */}
               <div>
-                <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">Full Name</label>
+                <label className="block text-[10px] font-extrabold text-gray-400  tracking-wider mb-2">Full Name</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -165,7 +165,7 @@ export default function ClientProfile() {
 
               {/* Email Address */}
               <div>
-                <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">Email Address</label>
+                <label className="block text-[10px] font-extrabold text-gray-400  tracking-wider mb-2">Email Address</label>
                 {isEditing ? (
                   <input
                     type="email"
@@ -181,7 +181,7 @@ export default function ClientProfile() {
 
               {/* Phone Number */}
               <div>
-                <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">Phone Number</label>
+                <label className="block text-[10px] font-extrabold text-gray-400  tracking-wider mb-2">Phone Number</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -197,7 +197,7 @@ export default function ClientProfile() {
 
               {/* Age */}
               <div>
-                <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">Age</label>
+                <label className="block text-[10px] font-extrabold text-gray-400 tracking-wider mb-2">Age</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -213,7 +213,7 @@ export default function ClientProfile() {
 
               {/* Residential Address */}
               <div className="md:col-span-2">
-                <label className="block text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">Residential Address</label>
+                <label className="block text-[10px] font-extrabold text-gray-400  tracking-wider mb-2">Residential Address</label>
                 {isEditing ? (
                   <input
                     type="text"
@@ -228,8 +228,6 @@ export default function ClientProfile() {
               </div>
             </div>
 
-            {/* بانر المعاينة البياني أسفل البيانات */}
-            
             
           </div>
 
@@ -251,7 +249,7 @@ export default function ClientProfile() {
                   <Flag size={18} />
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">Start</p>
+                  <p className="text-[10px] text-gray-400 font-extrabold  tracking-wider">Start</p>
                   <p className="text-base font-bold text-gray-900">73.5 kg</p>
                 </div>
               </div>
@@ -260,7 +258,7 @@ export default function ClientProfile() {
                   <TrendingDown size={18} />
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">Current</p>
+                  <p className="text-[10px] text-gray-400 font-extrabold  tracking-wider">Current</p>
                   <p className="text-base font-bold text-gray-950">68.5 kg</p>
                 </div>
               </div>
@@ -269,7 +267,7 @@ export default function ClientProfile() {
                   <Target size={18} />
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">Target</p>
+                  <p className="text-[10px] text-gray-400 font-extrabold  tracking-wider">Target</p>
                   <p className="text-base font-bold text-gray-900">65.0 kg</p>
                 </div>
               </div>
@@ -288,19 +286,19 @@ export default function ClientProfile() {
             </h2>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gray-50/70 border border-gray-100/50 rounded-2xl p-4">
-                <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Weight</p>
+                <p className="text-[10px] text-gray-400 font-extrabold  tracking-wider mb-1">Weight</p>
                 <p className="text-lg font-black text-[#016333]">68.5 kg</p>
               </div>
               <div className="bg-gray-50/70 border border-gray-100/50 rounded-2xl p-4">
-                <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Height</p>
+                <p className="text-[10px] text-gray-400 font-extrabold  tracking-wider mb-1">Height</p>
                 <p className="text-lg font-black text-gray-900">168 cm</p>
               </div>
               <div className="bg-gray-50/70 border border-gray-100/50 rounded-2xl p-4">
-                <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Goal Type</p>
+                <p className="text-[10px] text-gray-400 font-extrabold  tracking-wider mb-1">Goal Type</p>
                 <p className="text-sm font-bold text-gray-900 mt-1">Weight Loss</p>
               </div>
               <div className="bg-gray-50/70 border border-gray-100/50 rounded-2xl p-4">
-                <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider mb-1">Activity</p>
+                <p className="text-[10px] text-gray-400 font-extrabold  tracking-wider mb-1">Activity</p>
                 <p className="text-sm font-bold text-gray-900 mt-1">Moderate</p>
               </div>
             </div>
@@ -315,25 +313,25 @@ export default function ClientProfile() {
             </h2>
             <div className="space-y-5">
               <div>
-                <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">Chronic Diseases</p>
+                <p className="text-[10px] font-extrabold text-gray-400  tracking-wider mb-2">Chronic Diseases</p>
                 <span className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-100/50 inline-block">
                   None Recorded
                 </span>
               </div>
               <div>
-                <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">Allergies</p>
+                <p className="text-[10px] font-extrabold text-gray-400  tracking-wider mb-2">Allergies</p>
                 <div className="flex gap-2 flex-wrap">
-                  <span className="bg-red-50 text-red-600 text-[10px] font-extrabold px-3 py-1.5 rounded-xl border border-red-100/50 tracking-wide uppercase">
+                  <span className="bg-red-50 text-red-600 text-[10px] font-extrabold px-3 py-1.5 rounded-xl border border-red-100/50 tracking-wide ">
                     Peanuts
                   </span>
-                  <span className="bg-red-50 text-red-600 text-[10px] font-extrabold px-3 py-1.5 rounded-xl border border-red-100/50 tracking-wide uppercase">
+                  <span className="bg-red-50 text-red-600 text-[10px] font-extrabold px-3 py-1.5 rounded-xl border border-red-100/50 tracking-wide ">
                     Penicillin
                   </span>
                 </div>
               </div>
               <div>
-                <p className="text-[10px] font-extrabold text-gray-400 uppercase tracking-wider mb-2">Clinical Notes</p>
-                <div className="bg-gray-50 border border-gray-100 rounded-2xl p-4 text-xs font-medium text-gray-600 leading-relaxed italic">
+                <p className="text-[10px] font-extrabold text-gray-400  tracking-wider mb-2">Clinical Notes</p>
+                <div className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-100/50 inline-block">
                   "Patient is highly motivated. Progressing well on the Mediterranean diet plan. Regular sleep cycles reported."
                 </div>
               </div>
