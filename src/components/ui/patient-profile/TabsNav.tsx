@@ -1,11 +1,10 @@
-import { LayoutGrid, ClipboardCheck, Utensils, Dumbbell, StickyNote } from "lucide-react"
+import { LayoutGrid, Utensils, Dumbbell, StickyNote } from "lucide-react"
 
 const tabs = [
-  { id: "overview",  label: "Overview",   icon: LayoutGrid    },
-  { id: "checkup",   label: "Check-up",   icon: ClipboardCheck},
-  { id: "diet",      label: "Diet Plan",  icon: Utensils      },
-  { id: "body",      label: "Body",       icon: Dumbbell      },
-  { id: "notes",     label: "Notes",      icon: StickyNote    },
+  { id: "overview", label: "Overview",  icon: LayoutGrid },
+  { id: "diet",     label: "Diet Plan", icon: Utensils   },
+  { id: "body",     label: "Body",      icon: Dumbbell   },
+  { id: "notes",    label: "Notes",     icon: StickyNote },
 ]
 
 interface TabsNavProps {

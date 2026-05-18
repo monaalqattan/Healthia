@@ -1,12 +1,9 @@
-// src/features/diet-plan/constants.ts
-// كل القيم الثابتة — يعتمد على types.ts فقط
-
 import type { EquationOption, ActivityOption, PatientForm, DietTargets } from "./types";
 
 export const EQUATIONS: EquationOption[] = [
-  { key: "katch",   label: "Katch-McArdle"   },
-  { key: "harris",  label: "Harris-Benedict"  },
-  { key: "mifflin", label: "Mifflin-St Jeor"  },
+  { key: "katch",   label: "Katch-McArdle"  },
+  { key: "harris",  label: "Harris-Benedict" },
+  { key: "mifflin", label: "Mifflin-St Jeor" },
 ];
 
 export const ACTIVITY_OPTIONS: ActivityOption[] = [
@@ -18,7 +15,9 @@ export const ACTIVITY_OPTIONS: ActivityOption[] = [
 ];
 
 export const DAYS_OF_WEEK = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"] as const;
-export const PAGE_TABS    = ["Patient Overview","Nutritional Goals","History"] as const;
+
+// ✅ Nutritional Goals اتشالت
+export const PAGE_TABS = ["Clinical Diet Planner", "Patient Overview", "History"] as const;
 
 export const MIN_CALORIES      = 1200;
 export const PROTEIN_PER_KG    = 2.2;
