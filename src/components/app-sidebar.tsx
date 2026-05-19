@@ -1,5 +1,5 @@
 // components/AppSidebar.tsx
-import { useLocation, Link } from "react-router"
+import { useLocation, Link, NavLink } from "react-router"
 import {
   Sidebar,
   SidebarContent,
@@ -46,24 +46,21 @@ export function AppSidebar({
     const active = isActive(item.path)
     return (
       <SidebarMenuItem>
-        <SidebarMenuButton
-          asChild
-          className={`h-10 rounded-full transition-all duration-200 ${
-            active
-              ? "scale-[1.03] bg-emerald-800 text-white shadow-md"
-              : "text-emerald-100 hover:bg-emerald-800/50 hover:text-white"
-          }`}
+        <NavLink
+          end
+          to={item.path}
+          className="sidebar flex items-center gap-3 text-emerald-100 hover:bg-emerald-800/50 hover:text-white"
         >
-          <Link to={item.path} className="flex items-center gap-3">
+          <SidebarMenuButton
+            className={`h-10 rounded-full transition-all duration-200`}
+          >
             <item.icon
               className={`h-5 w-5 transition-transform duration-200 ${active ? "scale-110" : ""}`}
             />
             <span className="text-sm font-medium">{item.title}</span>
-            {active && (
-              <span className="ml-auto h-1.5 w-1.5 rounded-full bg-emerald-300" />
-            )}
-          </Link>
-        </SidebarMenuButton>
+          
+          </SidebarMenuButton>
+        </NavLink>
       </SidebarMenuItem>
     )
   }
