@@ -65,3 +65,10 @@
 /* 4. كلاسات مساعدة */
 .plus-jakarta { font-family: "Plus Jakarta Sans", sans-serif !important; }
 .manrope { font-family: "Manrope", sans-serif !important; }
+
+.sidebar.active {
+   @apply scale-[1.03] bg-emerald-800 text-white shadow-md relative
+}
+.sidebar.active::after {
+   @apply ml-auto h-1.5 w-1.5 rounded-full bg-emerald-300 absolute
+}

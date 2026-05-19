@@ -12,7 +12,7 @@ import {
 } from "lucide-react"
 
 const menuItems = [
-  { title: "Overview", icon: LayoutGrid, path: "/" },
+  { title: "Overview", icon: LayoutGrid, path: "/patient" },
   { title: "Patients", icon: Users, path: "/patients" },
   { title: "Appointment", icon: Calendar, path: "/appointments" },
   { title: "Analytics", icon: BarChart3, path: "/analytics" },
@@ -20,8 +20,8 @@ const menuItems = [
 ]
 
 const bottomItems = [
-  { title: "Settings", icon: Settings, path: "/settings" },
-  { title: "Support", icon: HelpCircle, path: "/support" },
+  { title: "Settings", icon: Settings, path: "/patient/settings" },
+  { title: "Support", icon: HelpCircle, path: "/patient/support" },
 ]
 
 export default function MainLayout() {

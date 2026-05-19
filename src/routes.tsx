@@ -10,6 +10,7 @@ import AddPlan from "./pages/AddPlan/AddPlan"
 import Login from "./pages/Login/Login"
 import NewPassword from "./pages/NewPassword/NewPassword"
 import ResetPassword from "./pages/ResetPassword/ResetPassword"
+import Home from "./pages/LandingPage/Home"
 import PatientLayout from "./layouts/PatientLayout"
 
 import Patients from "./pages/Patients/Patients"
@@ -34,6 +35,10 @@ export const router = createBrowserRouter([
   {
     path: "/reset-password",
     element: <ResetPassword />,
+  },
+  {
+    path: "/home",
+    element: <Home />,
   },
   {
     path: "/",
@@ -80,7 +85,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "patient",
+    path: "/patient",
     element: <PatientLayout />,
     children: [
       {
