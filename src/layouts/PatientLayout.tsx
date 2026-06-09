@@ -3,31 +3,24 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import {
   LayoutGrid,
-  Users,
+  UtensilsCrossed,
   Calendar,
-  BarChart3,
+  Activity,
   User,
-  Settings,
-  HelpCircle,
 } from "lucide-react"
 
 const menuItems = [
-  { title: "Overview", icon: LayoutGrid, path: "/patient" },
-  { title: "Meal Plans", icon: Users, path: "/patient/meal-plan" },
-  { title: "Appointment", icon: Calendar, path: "/patient/book-appointment" },
-  { title: "Tracking", icon: BarChart3, path: "/patient/tracking" },
-  { title: "Profile", icon: User, path: "/patient/patient-profile" },
+  { title: "Dashboard",   icon: LayoutGrid,      path: "/patient" },
+  { title: "Meal Plan",   icon: UtensilsCrossed, path: "/patient/meal-plan" },
+  { title: "Appointment", icon: Calendar,        path: "/patient/book-appointment" },
+  { title: "Tracking",    icon: Activity,        path: "/patient/tracking" },
+  { title: "My Profile",  icon: User,            path: "/patient/patient-profile" },
 ]
 
-const bottomItems = [
-  { title: "Settings", icon: Settings, path: "/patient/settings" },
-  { title: "Support", icon: HelpCircle, path: "/patient/support" },
-]
-
-export default function MainLayout() {
+export default function PatientLayout() {
   return (
     <SidebarProvider className="h-screen">
-      <AppSidebar menuItems={menuItems} bottomItems={bottomItems} />
+      <AppSidebar menuItems={menuItems} bottomItems={[]} subtitle="PATIENT PORTAL" />
       <main className="flex flex-1 flex-col overflow-auto">
         <SidebarTrigger />
         <Outlet />

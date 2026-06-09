@@ -1,39 +1,57 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router"
-import { usePatients, generatePatientId, generatePassword, calcBMI } from "@/store/patientsStore"
-import type { PatientRecord } from "@/store/patientsStore"
 import { DataTable } from "@/components/PatientData/data-table"
 import { createColumns } from "@/components/PatientData/columns"
 import AddPatientModal from "@/pages/Patients/AddPatientModal"
 import SuccessAlert from "@/pages/Patients/SuccessAlert"
+import { patientService } from "@/services/api"
 
 export default function RecentPatients() {
-  const { patients, addPatient, deletePatient, selectPatient } = usePatients()
   const navigate = useNavigate()
-
-  const [showModal,     setShowModal]     = useState(false)
-  const [newPatient,    setNewPatient]    = useState<PatientRecord | null>(null)
+  const [patients, setPatients]           = useState<any[]>([])
+  const [isLoading, setIsLoading]         = useState(true)
+  const [showModal, setShowModal]         = useState(false)
+  const [newPatient, setNewPatient]       = useState<any | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
-  const handleGoToProfile = (id: string) => {
-    selectPatient(id)
-    navigate("/patientProfile")
+  const fetchPatients = async () => {
+    try {
+      const res = await patientService.getMyPatients()
+      setPatients(res.data)
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  const handleCreate = (formData: any) => {
-    const id       = generatePatientId(patients.length + 1)
-    const password = generatePassword(formData.name)
-    const bmi      = calcBMI(formData.weight, formData.height)
-    const now      = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })
-    const patient: PatientRecord = {
-      id, password, ...formData,
-      lastCheckIn: now, planStatus: "active", compliance: 0,
-      bmi, adherence: 0, goals: [], notes: [], appointments: [], checkups: [],
-      avatar: `https://i.pravatar.cc/150?u=${Date.now()}`,
+  useEffect(() => { fetchPatients() }, [])
+
+  const handleGoToProfile = (id: string) => {
+    localStorage.setItem("selectedPatientId", id)
+    navigate("/doctor/patientProfile")
+  }
+
+  const handleCreate = async (formData: any) => {
+    try {
+      const res = await patientService.add(formData)
+      setShowModal(false)
+      setNewPatient(res.data.patient)
+      fetchPatients()
+    } catch (err: any) {
+      console.error(err)
+      alert(err.response?.data?.message || "Failed to create patient")
     }
-    addPatient(patient)
-    setShowModal(false)
-    setNewPatient(patient)
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      await patientService.delete(id)
+      setDeleteConfirm(null)
+      fetchPatients()
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   const columns = createColumns(
@@ -41,19 +59,23 @@ export default function RecentPatients() {
     (id) => setDeleteConfirm(id),
   )
 
+  if (isLoading) return (
+    <div className="mt-4 bg-white rounded-2xl p-8 text-center text-gray-400 shadow-sm">
+      Loading patients...
+    </div>
+  )
+
   return (
     <div className="mt-4 md:mt-6">
       <DataTable
-        data={patients.slice(0, 5)}   // بيعرض آخر 5 بس في الـ dashboard
+        data={patients.slice(0, 5)}
         columns={columns}
-        onRowClick={(p) => handleGoToProfile(p.id)}
+        onRowClick={(p) => handleGoToProfile(p._id)}
         pageSize={5}
-        showSearch={false}            // مفيش search في الـ dashboard
-        showHeader={true}             // بيعرض عنوان Recent Patients
-        onAddPatient={() => setShowModal(true)}
+        showSearch={false}
+        showHeader={true}
       />
 
-      {/* Delete Confirm */}
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
           <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
@@ -64,7 +86,7 @@ export default function RecentPatients() {
                 className="flex-1 py-2 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50">
                 Cancel
               </button>
-              <button onClick={() => { deletePatient(deleteConfirm); setDeleteConfirm(null) }}
+              <button onClick={() => handleDelete(deleteConfirm!)}
                 className="flex-1 py-2 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600">
                 Delete
               </button>
@@ -74,12 +96,19 @@ export default function RecentPatients() {
       )}
 
       {showModal && (
-        <AddPatientModal onClose={() => setShowModal(false)} onCreate={handleCreate} patientCount={patients.length} />
+        <AddPatientModal
+          onClose={() => setShowModal(false)}
+          onCreate={handleCreate}
+          patientCount={patients.length}
+        />
       )}
+
       {newPatient && (
-        <SuccessAlert patient={newPatient}
-          onGoToProfile={() => { handleGoToProfile(newPatient.id); setNewPatient(null) }}
-          onBack={() => setNewPatient(null)} />
+        <SuccessAlert
+          patient={newPatient}
+          onGoToProfile={() => { handleGoToProfile(newPatient._id); setNewPatient(null) }}
+          onBack={() => setNewPatient(null)}
+        />
       )}
     </div>
   )

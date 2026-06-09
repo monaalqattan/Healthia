@@ -1,55 +1,68 @@
 // src/pages/Appointment/Appointment.tsx
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import WeeklySchedule from "../../components/ui/Appointment/WeeklySchedule"
 import UpcomingAppointments from "../../components/ui/Appointment/UpcomingAppointments"
 import ManageAvailability from "../../components/ui/Appointment/ManageAvailability"
-import type { Session } from "../../store/appointmentStore"
-
-// ✅ شلنا import Navbar لأنه مش مستخدم
+import { appointmentService } from "@/services/api"
 
 export interface AppointmentType {
-  id: number
-  time: string
-  period: string
+  id: number | string
+  time: string        // HH:mm (24h) — للمقارنة
+  timeDisplay: string // "9:00 AM" — للعرض
   name: string
   type: string
-  status: "start" | "review"
-  avatar: string
+  status: "scheduled" | "completed" | "cancelled"
+  date: string        // YYYY-MM-DD
   day: number
 }
 
-const initialAppointments: AppointmentType[] = [
-  {
-    id: 1, time: "9:00", period: "AM",
-    name: "manar rabie", type: "Initial Consult",
-    status: "start", avatar: "https://i.pravatar.cc/40?img=47", day: 17,
-  },
-  {
-    id: 2, time: "10:30", period: "AM",
-    name: "mohamed rabie", type: "Follow-up",
-    status: "review", avatar: "https://i.pravatar.cc/40?img=11", day: 17,
-  },
-]
+function mapApiToLocal(a: any): AppointmentType {
+  const date   = new Date(a.date)
+  const timeRaw = a.time ?? "00:00"          // HH:mm من الباك إند
+  const [h, m] = timeRaw.split(":").map(Number)
+  const period = h >= 12 ? "PM" : "AM"
+  const h12    = h % 12 || 12
+  return {
+    id:          a._id,
+    time:        timeRaw,
+    timeDisplay: `${h12}:${String(m).padStart(2,"0")} ${period}`,
+    name:        a.patient?.name || "Patient",
+    type:        a.type || "Follow-up",
+    status:      a.status || "scheduled",
+    date:        `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`,
+    day:         date.getDate(),
+  }
+}
 
 export default function Appointment() {
-  const [appointments, setAppointments] = useState<AppointmentType[]>(initialAppointments)
-  const [selectedDay, setSelectedDay] = useState(17)
-  const [weekOffset, setWeekOffset] = useState(0)
+  const [appointments, setAppointments] = useState<AppointmentType[]>([])
+  const [selectedDay, setSelectedDay]   = useState(new Date().getDate())
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const t = new Date()
+    return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,'0')}-${String(t.getDate()).padStart(2,'0')}`
+  })
+  const [weekOffset, setWeekOffset]     = useState(0)
+  const [isLoading, setIsLoading]       = useState(true)
 
-  const addAppointment = (newAppt: Omit<AppointmentType, "id" | "avatar">) => {
-    setAppointments((prev) => [
-      ...prev,
-      {
-        ...newAppt,
-        id: Date.now(),
-        avatar: `https://i.pravatar.cc/40?img=${Math.floor(Math.random() * 70)}`,
-      },
-    ])
+  const loadAppointments = useCallback(() => {
+    appointmentService.getMyAppointments()
+      .then(res => setAppointments(res.data.map(mapApiToLocal)))
+      .catch(console.error)
+      .finally(() => setIsLoading(false))
+  }, [])
+
+  useEffect(() => { loadAppointments() }, [loadAppointments])
+
+  // لما يختار يوم من الأسبوع، نحسب التاريخ الكامل
+  const handleSelectDay = (day: number, date: string) => {
+    setSelectedDay(day)
+    setSelectedDate(date)
   }
 
-  const handleSessionsChange = (newSessions: Session[]) => {
-    localStorage.setItem("doctorSessions", JSON.stringify(newSessions))
-  }
+  // بعد walk-in يتحفظ، نعيد التحميل
+  const handleWalkInSaved = () => loadAppointments()
+
+  const dayAppointments = appointments.filter(a => a.date === selectedDate)
 
   return (
     <div className="p-4 md:p-6 bg-gray-50 min-h-full w-full">
@@ -61,40 +74,41 @@ export default function Appointment() {
           </p>
         </div>
         <div className="flex gap-2 self-start">
-          <button
-            onClick={() => setWeekOffset((w) => w - 1)}
-            className="flex items-center gap-1 border border-gray-200 bg-white rounded-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-all cursor-pointer"
-          >
+          <button onClick={() => setWeekOffset(w => w - 1)}
+            className="flex items-center gap-1 border border-gray-200 bg-white rounded-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-all cursor-pointer">
             ‹ Prev
           </button>
-          <button
-            onClick={() => setWeekOffset((w) => w + 1)}
-            className="flex items-center gap-1 border border-gray-200 bg-white rounded-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-all cursor-pointer"
-          >
+          <button onClick={() => setWeekOffset(w => w + 1)}
+            className="flex items-center gap-1 border border-gray-200 bg-white rounded-full px-4 py-2 text-sm text-gray-600 hover:bg-gray-100 transition-all cursor-pointer">
             Next ›
           </button>
         </div>
       </div>
 
-      <WeeklySchedule
-        selectedDay={selectedDay}
-        onSelectDay={setSelectedDay}
-        weekOffset={weekOffset}
-        appointments={appointments}
-      />
-
-      <div
-        className="mt-4 flex flex-col gap-4 lg:grid lg:gap-4"
-        style={{ gridTemplateColumns: "1fr 380px" }}
-      >
-        {/* ✅ شلنا الـ props المكررة: onSelectDay, weekOffset, appointments التانية */}
-        <UpcomingAppointments
-          appointments={appointments.filter((a) => a.day === selectedDay)}
-          selectedDay={selectedDay}
-          onAddAppointment={addAppointment}
-        />
-        <ManageAvailability onSessionsChange={handleSessionsChange} />
-      </div>
+      {isLoading ? (
+        <div className="bg-white rounded-2xl p-8 text-center text-gray-400 shadow-sm">
+          Loading appointments...
+        </div>
+      ) : (
+        <>
+          <WeeklySchedule
+            selectedDay={selectedDay}
+            onSelectDay={handleSelectDay}
+            weekOffset={weekOffset}
+            appointments={appointments}
+          />
+          <div className="mt-4 flex flex-col gap-4 lg:grid lg:gap-4"
+            style={{ gridTemplateColumns: "1fr 380px" }}>
+            <UpcomingAppointments
+              appointments={dayAppointments}
+              selectedDay={selectedDay}
+              selectedDate={selectedDate}
+              onWalkInSaved={handleWalkInSaved}
+            />
+            <ManageAvailability selectedDate={selectedDate} />
+          </div>
+        </>
+      )}
     </div>
   )
 }

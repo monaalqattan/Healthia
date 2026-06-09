@@ -1,5 +1,4 @@
-// components/AppSidebar.tsx
-import { useLocation, Link, NavLink } from "react-router"
+import { NavLink } from "react-router"
 import {
   Sidebar,
   SidebarContent,
@@ -10,7 +9,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import {  type LucideIcon } from "lucide-react"
+import { type LucideIcon, LogOut } from "lucide-react"
+import { useAuth } from "@/context/AuthContext"
 
 export type SidebarItem = {
   title: string
@@ -23,9 +23,6 @@ type AppSidebarProps = {
   bottomItems?: SidebarItem[]
   title?: string
   subtitle?: string
-  userInitials?: string
-  userName?: string
-  userRole?: string
 }
 
 export function AppSidebar({
@@ -33,44 +30,46 @@ export function AppSidebar({
   bottomItems = [],
   title = "Healthia",
   subtitle = "CLINICAL MANAGEMENT",
-  userInitials = "DA",
-  userName = "Dr. Aris Thome",
-  userRole = "Cardiologist",
 }: AppSidebarProps) {
-  const { pathname } = useLocation()
+  const { user, logout } = useAuth()
 
-  const isActive = (path: string) =>
-    path === "/" ? pathname === "/" : pathname.startsWith(path)
+  const initials = user?.name
+    ? user.name.split(" ").map((n: string) => n[0]).slice(0, 2).join("").toUpperCase()
+    : "?"
 
-  const NavItem = ({ item }: { item: SidebarItem }) => {
-    const active = isActive(item.path)
-    return (
-      <SidebarMenuItem>
-        <NavLink
-          end
-          to={item.path}
-          className="sidebar flex items-center gap-3 text-emerald-100 hover:bg-emerald-800/50 hover:text-white"
-        >
+  const roleLabel =
+    user?.role === "patient" ? "Patient" :
+    user?.role === "doctor"  ? "Doctor"  : "Admin"
+
+  const NavItem = ({ item }: { item: SidebarItem }) => (
+    <SidebarMenuItem>
+      <NavLink
+        end={item.path === "/patient" || item.path === "/doctor" || item.path === "/admin"}
+        to={item.path}
+        className="flex items-center"
+      >
+        {({ isActive }) => (
           <SidebarMenuButton
-            className={`h-10 rounded-full transition-all duration-200`}
+            className={`h-10 rounded-full w-full flex items-center gap-3 transition-all duration-200 ${
+              isActive
+                ? "bg-white/20 text-white font-semibold"
+                : "text-emerald-100 hover:bg-emerald-800/50 hover:text-white"
+            }`}
           >
-            <item.icon
-              className={`h-5 w-5 transition-transform duration-200 ${active ? "scale-110" : ""}`}
-            />
+            <item.icon className={`h-5 w-5 shrink-0 ${isActive ? "scale-110" : ""}`} />
             <span className="text-sm font-medium">{item.title}</span>
-          
           </SidebarMenuButton>
-        </NavLink>
-      </SidebarMenuItem>
-    )
-  }
+        )}
+      </NavLink>
+    </SidebarMenuItem>
+  )
 
   return (
     <Sidebar className="overflow-hidden rounded-r-[50px] bg-primary">
       <SidebarHeader className="bg-primary">
         <div className="space-y-1">
           <div className="text-lg font-bold text-white">{title}</div>
-          <div className="text-xs font-semibold tracking-widest text-white">
+          <div className="text-xs font-semibold tracking-widest text-emerald-200">
             {subtitle}
           </div>
         </div>
@@ -99,13 +98,20 @@ export function AppSidebar({
 
         <div className="border-t border-emerald-700 pt-2">
           <div className="flex items-center gap-3 p-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
-              {userInitials}
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-600 text-xs font-bold text-white">
+              {initials}
             </div>
-            <div className="text-xs">
-              <div className="font-semibold text-white">{userName}</div>
-              <div className="text-emerald-200">{userRole}</div>
+            <div className="flex-1 min-w-0 text-xs">
+              <div className="font-semibold text-white truncate">{user?.name || "—"}</div>
+              <div className="text-emerald-200 capitalize">{roleLabel}</div>
             </div>
+            <button
+              onClick={logout}
+              title="Logout"
+              className="p-1.5 rounded-lg text-emerald-300 hover:text-white hover:bg-emerald-800/50 transition-colors shrink-0"
+            >
+              <LogOut size={15} />
+            </button>
           </div>
         </div>
       </SidebarFooter>

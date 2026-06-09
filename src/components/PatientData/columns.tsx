@@ -1,29 +1,34 @@
 import type { ColumnDef } from "@tanstack/react-table"
-// import { useNavigate } from "react-router"
 import { Eye, Trash2, MoreVertical } from "lucide-react"
 import { useState } from "react"
-import type { PatientRecord, PlanStatus } from "@/store/patientsStore"
+
+// بنستغنى عن PatientRecord من patientsStore ونستخدم any عشان الـ API data
+type PlanStatus = "active" | "on-review" | "lapsed"
 
 const statusConfig: Record<PlanStatus, { bg: string; text: string; dot: string; label: string }> = {
   active:      { bg: "bg-green-50",  text: "text-green-700",  dot: "bg-green-500",  label: "ACTIVE PLAN" },
   "on-review": { bg: "bg-yellow-50", text: "text-yellow-700", dot: "bg-yellow-400", label: "ON REVIEW"   },
-  lapsed:      { bg: "bg-red-50",    text: "text-red-500",    dot: "bg-red-400",    label: "LAPSED"       },
+  lapsed:      { bg: "bg-red-50",    text: "text-red-500",    dot: "bg-red-400",    label: "LAPSED"      },
 }
+
+// fallback لو القيمة مش موجودة
+const defaultStatus = statusConfig["active"]
 
 const complianceColor = (v: number) =>
   v > 80 ? "bg-green-600" : v > 50 ? "bg-yellow-400" : "bg-red-400"
 
-// Actions cell — component منفصل عشان يستخدم hooks
 function ActionsCell({
   patient,
   onDelete,
   onNavigate,
 }: {
-  patient: PatientRecord
+  patient: any
   onDelete: (id: string) => void
   onNavigate: (id: string) => void
 }) {
   const [open, setOpen] = useState(false)
+  // الـ API بيرجع _id، الـ mock بيرجع id
+  const id = patient._id || patient.id
 
   return (
     <div className="relative" onClick={e => e.stopPropagation()}>
@@ -34,15 +39,21 @@ function ActionsCell({
         <MoreVertical size={16} />
       </button>
       {open && (
-        <div className="absolute right-0 top-8 bg-white border border-gray-100 rounded-xl shadow-lg z-20 py-1 w-40"
-          onMouseLeave={() => setOpen(false)}>
-          <button onClick={() => { onNavigate(patient.id); setOpen(false) }}
-            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50">
+        <div
+          className="absolute right-0 top-8 bg-white border border-gray-100 rounded-xl shadow-lg z-20 py-1 w-40"
+          onMouseLeave={() => setOpen(false)}
+        >
+          <button
+            onClick={() => { onNavigate(id); setOpen(false) }}
+            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
+          >
             <Eye size={13} /> View Profile
           </button>
           <div className="border-t border-gray-100 my-1" />
-          <button onClick={() => { onDelete(patient.id); setOpen(false) }}
-            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50">
+          <button
+            onClick={() => { onDelete(id); setOpen(false) }}
+            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50"
+          >
             <Trash2 size={13} /> Delete
           </button>
         </div>
@@ -51,27 +62,28 @@ function ActionsCell({
   )
 }
 
-// Factory function — بتاخد callbacks وبترجع الـ columns
 export function createColumns(
   onNavigate: (id: string) => void,
   onDelete:   (id: string) => void,
-): ColumnDef<PatientRecord>[] {
+): ColumnDef<any>[] {
   return [
     {
       accessorKey: "name",
       header: "PATIENT NAME",
       cell: ({ row }) => {
         const p = row.original
+        const id = p._id || p.id
         return (
           <div className="flex items-center gap-3">
-            <img
-              src={p.avatar || `https://i.pravatar.cc/150?u=${p.id}`}
-              alt={p.name}
-              className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-            />
+            <div className="w-8 h-8 rounded-full bg-emerald-700 flex items-center justify-center text-white text-xs font-bold shrink-0 overflow-hidden">
+              {p.profileImage || p.avatar
+                ? <img src={p.profileImage || p.avatar} alt={p.name} className="w-full h-full object-cover" />
+                : (p.name ? p.name[0].toUpperCase() : "P")
+              }
+            </div>
             <div>
               <div className="font-semibold text-gray-800 text-sm">{p.name}</div>
-              <div className="text-xs text-gray-400">{p.id}</div>
+              <div className="text-xs text-gray-400">{p.patientId || p.id || id}</div>
             </div>
           </div>
         )
@@ -80,15 +92,24 @@ export function createColumns(
     {
       accessorKey: "lastCheckIn",
       header: "LAST CHECK-IN",
-      cell: ({ getValue }) => (
-        <span className="text-gray-500 text-sm whitespace-nowrap">{getValue() as string}</span>
-      ),
+      cell: ({ row }) => {
+        // الـ API مش بترجع lastCheckIn — بنستخدم updatedAt
+        const p = row.original
+        const date = p.lastCheckIn || p.updatedAt
+        const display = date
+          ? new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+          : "—"
+        return <span className="text-gray-500 text-sm whitespace-nowrap">{display}</span>
+      },
     },
     {
       accessorKey: "planStatus",
       header: "PLAN STATUS",
-      cell: ({ getValue }) => {
-        const s = statusConfig[getValue() as PlanStatus]
+      cell: ({ row }) => {
+        const p = row.original
+        // الـ API مش بترجع planStatus — بنستخدم clientType كـ fallback
+        const rawStatus = p.planStatus as PlanStatus
+        const s = statusConfig[rawStatus] || defaultStatus
         return (
           <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full ${s.bg} ${s.text}`}>
             <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
@@ -100,8 +121,8 @@ export function createColumns(
     {
       accessorKey: "compliance",
       header: "COMPLIANCE",
-      cell: ({ getValue }) => {
-        const v = getValue() as number
+      cell: ({ row }) => {
+        const v = (row.original.compliance ?? row.original.adherence ?? 0) as number
         return (
           <div className="flex items-center gap-2">
             <div className="w-20 h-1.5 bg-gray-100 rounded-full overflow-hidden">

@@ -11,15 +11,14 @@ import {
   useReactTable,
 } from "@tanstack/react-table"
 import { Search, ChevronLeft, ChevronRight } from "lucide-react"
-import type { PatientRecord } from "@/store/patientsStore"
 
 interface DataTableProps {
-  data:          PatientRecord[]
-  columns:       ColumnDef<PatientRecord>[]
-  onRowClick?:   (patient: PatientRecord) => void
+  data:          any[]
+  columns:       ColumnDef<any>[]
+  onRowClick?:   (patient: any) => void
   pageSize?:     number
   showSearch?:   boolean
-  showHeader?:   boolean   // عنوان Recent Patients
+  showHeader?:   boolean
   onAddPatient?: () => void
 }
 
@@ -52,7 +51,6 @@ export function DataTable({
   return (
     <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
 
-      {/* Header — بيظهر بس لو showHeader=true */}
       {showHeader && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-5 pt-5 pb-3">
           <div>
@@ -73,7 +71,6 @@ export function DataTable({
         </div>
       )}
 
-      {/* Search standalone — لو مفيش header */}
       {!showHeader && showSearch && (
         <div className="px-5 pt-4">
           <div className="relative w-fit">
@@ -88,7 +85,6 @@ export function DataTable({
         </div>
       )}
 
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-sm min-w-[580px]">
           <thead>
@@ -132,7 +128,6 @@ export function DataTable({
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="flex items-center justify-between px-5 py-3 border-t border-gray-100">
         <span className="text-xs text-gray-400">
           Showing{" "}
@@ -155,7 +150,6 @@ export function DataTable({
         </div>
       </div>
 
-      {/* Add Button */}
       {onAddPatient && (
         <div className="px-5 pb-5">
           <button onClick={onAddPatient}

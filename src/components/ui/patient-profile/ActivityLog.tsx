@@ -1,88 +1,67 @@
+import { useEffect, useState } from "react"
 import { Utensils, Activity, ClipboardList } from "lucide-react"
+import { dailyLogService } from "@/services/api"
 
-interface ActivityItem {
-  id: number
-  type: "meal" | "exercise" | "log"
-  title: string
-  description: string
-  tags?: string[]
-  time: string
-}
+export default function ActivityLog({ patientId }: { patientId: string }) {
+  const [logs, setLogs]         = useState<any[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
-const activities: ActivityItem[] = [
-  {
-    id: 1, type: "meal",
-    title: "Meal Log: Protein-Rich Dinner",
-    description: "Grilled salmon, quinoa, and steamed broccoli. 580 kcal.",
-    tags: ["PROTEIN HIGH", "VERIFIED LOG"],
-    time: "2h ago",
-  },
-  {
-    id: 2, type: "exercise",
-    title: "Activity: 45min Swim in a 16g",
-    description: "Steady pace laps. 320 kcal burned. Avg HR: 135bpm.",
-    time: "Today, 8:15 AM",
-  },
-  {
-    id: 3, type: "log",
-    title: "Daily Weigh-in",
-    description: "Logged 68.4 kg. Down 0.2kg from yesterday.",
-    time: "Today, 7:00 AM",
-  },
-]
+  useEffect(() => {
+    dailyLogService.getPatientLogs(patientId)
+      .then(res => setLogs(res.data.slice(0, 5)))
+      .catch(console.error)
+      .finally(() => setIsLoading(false))
+  }, [patientId])
 
-const typeConfig = {
-  meal:     { icon: Utensils,      color: "bg-green-100 text-green-600"   },
-  exercise: { icon: Activity,      color: "bg-orange-100 text-orange-600" },
-  log:      { icon: ClipboardList, color: "bg-blue-100 text-blue-600"     },
-}
+  if (isLoading) return (
+    <div className="bg-white rounded-2xl w-full p-6 shadow-sm text-center text-gray-400 text-sm">
+      Loading activity...
+    </div>
+  )
 
-export default function ActivityLog() {
+  if (logs.length === 0) return (
+    <div className="bg-white rounded-2xl w-full p-6 shadow-sm text-center text-gray-400 text-sm">
+      No activity logged yet.
+    </div>
+  )
+
   return (
-    // ✅ w-full بدل w-240، وشلنا h-90 الثابت
     <div className="bg-white rounded-2xl w-full p-4 md:p-6 shadow-sm">
       <div className="flex justify-between items-center mb-4">
         <h3 className="font-semibold text-gray-800 text-sm md:text-base">Activity Log</h3>
-        <button className="text-sm text-green-600 hover:underline">View All →</button>
       </div>
-
       <div className="flex flex-col gap-4">
-        {activities.map((activity) => {
-          const config = typeConfig[activity.type]
-          const Icon = config.icon
-          return (
-            <div key={activity.id} className="flex items-start gap-3 md:gap-4">
-
-              <div className={`w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center shrink-0 ${config.color}`}>
-                <Icon className="w-4 h-4 md:w-5 md:h-5" />
-              </div>
-
-              {/* min-w-0 مهم عشان النص ميطلعش برا الكارت */}
-              <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-start gap-2">
-                  <p className="text-xs md:text-sm font-medium text-gray-800 leading-tight truncate">
-                    {activity.title}
-                  </p>
-                  <span className="text-[10px] md:text-xs text-gray-400 shrink-0">
-                    {activity.time}
-                  </span>
-                </div>
-                <p className="text-[11px] md:text-xs text-gray-500 mt-1">
-                  {activity.description}
+        {logs.map((log: any, i: number) => (
+          <div key={i} className="flex items-start gap-3 md:gap-4">
+            <div className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 bg-green-100 text-green-600">
+              <ClipboardList className="w-4 h-4" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex justify-between items-start gap-2">
+                <p className="text-xs md:text-sm font-medium text-gray-800 leading-tight">
+                  Daily Health Log
                 </p>
-                {activity.tags && (
-                  <div className="flex flex-wrap gap-1 md:gap-2 mt-2">
-                    {activity.tags.map((tag) => (
-                      <span key={tag} className="text-[9px] md:text-[10px] font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                )}
+                <span className="text-[10px] md:text-xs text-gray-400 shrink-0">
+                  {new Date(log.date || log.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                </span>
+              </div>
+              <p className="text-[11px] md:text-xs text-gray-500 mt-1">
+                💧 {log.water} glasses · 😴 {log.sleep}h sleep · 🔥 {log.calories} kcal
+                {log.exercise && " · 🏃 Exercised"}
+              </p>
+              <div className="flex flex-wrap gap-1 mt-1">
+                <span className={`text-[9px] font-semibold px-2 py-0.5 rounded ${
+                  log.mood === "great" ? "bg-green-50 text-green-600" :
+                  log.mood === "good"  ? "bg-blue-50 text-blue-600"   :
+                  log.mood === "ok"    ? "bg-yellow-50 text-yellow-600":
+                                         "bg-red-50 text-red-500"
+                }`}>
+                  Mood: {log.mood}
+                </span>
               </div>
             </div>
-          )
-        })}
+          </div>
+        ))}
       </div>
     </div>
   )

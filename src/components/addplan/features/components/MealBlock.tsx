@@ -1,12 +1,10 @@
-// src/features/diet-plan/components/MealBlock.tsx
-// يعتمد على: types → MealBlockProps | logic/calculations → getMealTotal
-
+// src/components/addplan/features/components/MealBlock.tsx
 import { useState } from "react";
 import type { MealBlockProps } from "../types";
 import { getMealTotal } from "../logic/calculations";
 
 export default function MealBlock({
-  icon, name, suggested, foods, onAddFood, defaultOpen = false,
+  icon, name, suggested, foods, onAddFood, onRemoveFood, defaultOpen = false,
 }: MealBlockProps) {
   const [open, setOpen] = useState<boolean>(defaultOpen);
   const total = getMealTotal(foods);
@@ -35,8 +33,22 @@ export default function MealBlock({
         <div className="meal-body">
           {foods.map((food, i) => (
             <div key={i} className="food-item">
-              <span className="food-name">{food.name}</span>
-              <span className="food-kcal">{food.kcal} kcal</span>
+              <span className="food-name">
+                {food.name}
+                {food.quantity ? <small className="food-qty"> · {food.quantity}</small> : null}
+              </span>
+              <span className="food-right">
+                <span className="food-kcal">{food.kcal} kcal</span>
+                {onRemoveFood && (
+                  <button
+                    className="food-remove"
+                    title="حذف"
+                    onClick={(e) => { e.stopPropagation(); onRemoveFood(i); }}
+                  >
+                    ✕
+                  </button>
+                )}
+              </span>
             </div>
           ))}
           <button className="add-food-btn" onClick={onAddFood}>

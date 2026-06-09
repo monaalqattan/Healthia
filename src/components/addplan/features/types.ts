@@ -28,7 +28,18 @@ export interface DietTargets {
 }
 
 export interface Macros { pro: number; fat: number; carb: number; }
-export interface FoodItem { name: string; kcal: number; }
+
+// ✅ FoodItem اتوسّع: بقى فيه الماكروز عشان نخصمها ونحسبها
+export interface FoodItem {
+  foodId?:  string;   // الـ _id بتاع الأكلة في الداتابيز
+  name:     string;
+  kcal:     number;
+  protein?: number;
+  carbs?:   number;
+  fat?:     number;
+  quantity?: string;  // مثال: "كوب مطبوخ"
+}
+
 export interface Meal { id: string; name: string; icon: string; suggested: string; foods: FoodItem[]; }
 export interface NutritionGaps { calGap: number; proGap: number; carbGap: number; }
 export interface BMRInput { weight: number; height: number; age: number; gender: Gender; lbm: number; }
@@ -36,10 +47,15 @@ export interface ActivityOption { value: number; label: string; }
 export interface EquationOption { key: Equation; label: string; }
 
 export interface RingProps { value: string | number; unit: string; offset?: number; }
+
 export interface MealBlockProps {
   icon: string; name: string; suggested: string;
-  foods: FoodItem[]; onAddFood: () => void; defaultOpen?: boolean;
+  foods: FoodItem[];
+  onAddFood: () => void;
+  onRemoveFood?: (index: number) => void; // ✅ زرار حذف صنف
+  defaultOpen?: boolean;
 }
+
 export interface PatientBarProps { firstName: string; lastName: string; weight: number; height: number; goal: Goal; }
 export interface DietCalculatorProps {
   form: PatientForm;
@@ -48,6 +64,11 @@ export interface DietCalculatorProps {
   onCalculate: () => void; targets: DietTargets;
 }
 export interface MealStructureProps {
-  meals: Meal[]; onAddFood: (mealId: string) => void;
-  onAddMeal: () => void; targets: DietTargets; totalEaten: number;
+  meals: Meal[];
+  onAddFood: (mealId: string) => void;
+  onRemoveFood?: (mealId: string, index: number) => void;
+  onAddMeal: () => void;
+  onSave?: () => void;          // ✅ حفظ في الباك
+  targets: DietTargets;
+  totalEaten: number;
 }
