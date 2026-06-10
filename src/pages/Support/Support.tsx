@@ -61,7 +61,7 @@ export default function Support() {
       <img
         src={leafImg}
         alt=""
-        className="pointer-events-none absolute -left-20 top-20 w-105 opacity-20 select-none"
+        className="pointer-events-none absolute -left-20 top-20 w-[420px] opacity-20 select-none"
       />
 
       <AuthNav />
