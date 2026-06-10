@@ -29,7 +29,7 @@ import PatientBookAppointment from "./pages/CLIENT-SIDE/BookAppointment"
 
 import AdminDashboard from "./pages/Admin/AdminDashboard"
 import AdminSupport   from "./pages/Admin/AdminSupport"
-import Support        from "./pages/Support/Support"
+import Support from "./pages/Support/Support"
 import AdminDoctors   from "./pages/Admin/AdminDoctors"
 import AdminPatients  from "./pages/Admin/AdminPatients"
 
