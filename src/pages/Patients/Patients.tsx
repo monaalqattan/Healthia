@@ -56,7 +56,7 @@ export default function Patients() {
   }
 
   const handleCreate = async (
-    formData: PatientFormData
+    formData: NewPatientData
   ): Promise<{ error?: string }> => {
     try {
       const res = await patientService.add(formData)

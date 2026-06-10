@@ -2,16 +2,29 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router"
 import { DataTable } from "@/components/PatientData/data-table"
 import { createColumns } from "@/components/PatientData/columns"
-import AddPatientModal from "@/pages/Patients/AddPatientModal"
+import AddPatientModal, {
+  type NewPatientData,
+} from "@/pages/Patients/AddPatientModal"
 import SuccessAlert from "@/pages/Patients/SuccessAlert"
 import { patientService } from "@/services/api"
 
+type Patient = {
+  _id: string
+  name: string
+  email?: string
+  phone?: string
+  patientId?: string
+  category?: string
+  createdAt?: string
+  [key: string]: unknown
+}
+
 export default function RecentPatients() {
   const navigate = useNavigate()
-  const [patients, setPatients]           = useState<any[]>([])
-  const [isLoading, setIsLoading]         = useState(true)
-  const [showModal, setShowModal]         = useState(false)
-  const [newPatient, setNewPatient]       = useState<any | null>(null)
+  const [patients, setPatients] = useState<Patient[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [showModal, setShowModal] = useState(false)
+  const [newPatient, setNewPatient] = useState<Patient | null>(null)
   const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
 
   const fetchPatients = async () => {
@@ -25,22 +38,33 @@ export default function RecentPatients() {
     }
   }
 
-  useEffect(() => { fetchPatients() }, [])
+  useEffect(() => {
+    fetchPatients()
+  }, [])
 
   const handleGoToProfile = (id: string) => {
     localStorage.setItem("selectedPatientId", id)
     navigate("/doctor/patientProfile")
   }
 
-  const handleCreate = async (formData: any) => {
+  const handleCreate = async (
+    formData: NewPatientData
+  ): Promise<{ patientId?: string; error?: string }> => {
     try {
       const res = await patientService.add(formData)
+      const patient = res.data.patient as Patient
       setShowModal(false)
-      setNewPatient(res.data.patient)
+      setNewPatient(patient)
       fetchPatients()
-    } catch (err: any) {
+      return { patientId: patient._id }
+    } catch (err: unknown) {
       console.error(err)
-      alert(err.response?.data?.message || "Failed to create patient")
+      const message =
+        err instanceof Error
+          ? err.message
+          : (err as { response?: { data?: { message?: string } } })?.response
+              ?.data?.message
+      return { error: message || "Failed to create patient" }
     }
   }
 
@@ -56,14 +80,15 @@ export default function RecentPatients() {
 
   const columns = createColumns(
     (id) => handleGoToProfile(id),
-    (id) => setDeleteConfirm(id),
+    (id) => setDeleteConfirm(id)
   )
 
-  if (isLoading) return (
-    <div className="mt-4 bg-white rounded-2xl p-8 text-center text-gray-400 shadow-sm">
-      Loading patients...
-    </div>
-  )
+  if (isLoading)
+    return (
+      <div className="mt-4 rounded-2xl bg-white p-8 text-center text-gray-400 shadow-sm">
+        Loading patients...
+      </div>
+    )
 
   return (
     <div className="mt-4 md:mt-6">
@@ -78,16 +103,24 @@ export default function RecentPatients() {
 
       {deleteConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-sm shadow-xl">
-            <h3 className="text-base font-bold text-gray-800 mb-2">Delete Patient?</h3>
-            <p className="text-sm text-gray-400 mb-5">This action cannot be undone.</p>
+          <div className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-xl">
+            <h3 className="mb-2 text-base font-bold text-gray-800">
+              Delete Patient?
+            </h3>
+            <p className="mb-5 text-sm text-gray-400">
+              This action cannot be undone.
+            </p>
             <div className="flex gap-3">
-              <button onClick={() => setDeleteConfirm(null)}
-                className="flex-1 py-2 border border-gray-200 rounded-xl text-sm text-gray-600 hover:bg-gray-50">
+              <button
+                onClick={() => setDeleteConfirm(null)}
+                className="flex-1 rounded-xl border border-gray-200 py-2 text-sm text-gray-600 hover:bg-gray-50"
+              >
                 Cancel
               </button>
-              <button onClick={() => handleDelete(deleteConfirm!)}
-                className="flex-1 py-2 bg-red-500 text-white rounded-xl text-sm font-semibold hover:bg-red-600">
+              <button
+                onClick={() => handleDelete(deleteConfirm!)}
+                className="flex-1 rounded-xl bg-red-500 py-2 text-sm font-semibold text-white hover:bg-red-600"
+              >
                 Delete
               </button>
             </div>
@@ -106,7 +139,10 @@ export default function RecentPatients() {
       {newPatient && (
         <SuccessAlert
           patient={newPatient}
-          onGoToProfile={() => { handleGoToProfile(newPatient._id); setNewPatient(null) }}
+          onGoToProfile={() => {
+            handleGoToProfile(newPatient._id)
+            setNewPatient(null)
+          }}
           onBack={() => setNewPatient(null)}
         />
       )}
