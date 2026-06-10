@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router"
 import NotificationBell from "../NotificationBell/NotificationBell"
 import { useAuth } from "@/context/AuthContext"
-import logo from "@/assets/logoRemovebg.png"
+// import logo from "@/assets/logoRemovebg.png"
 
 function Navbar() {
   const { user } = useAuth()
@@ -14,11 +14,7 @@ function Navbar() {
   return (
     <div className="w-full bg-white px-4 py-2 shadow-sm">
       <div className="flex items-center justify-between gap-4">
-        <img
-          src={logo}
-          alt="Healthia Logo"
-          className="h-10 w-auto shrink-0"
-        />
+        <h1 className="text-xl font-bold text-[#065F46]">Healthia</h1>
         <div className="flex items-center gap-1">
           <NotificationBell />
           <span className="mx-3 block h-7 w-0.5 bg-[#E2E8F0]" />
