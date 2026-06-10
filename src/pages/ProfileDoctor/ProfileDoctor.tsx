@@ -4,7 +4,6 @@ import DoctorHeader from "@/components/DoctorHeader/DoctorHeader"
 import PersonalInfo from "@/components/Profile/PersonalInfo"
 import ProfessionalDetails from "@/components/Profile/ProfessionalDetails"
 import AvailabilitySchedule from "@/components/Profile/AvailabilitySchedule"
-import NotificationPreferences from "@/components/Profile/NotificationPreferences"
 import AccountSecurity from "@/components/Profile/AccountSecurity"
 import { doctorService } from "@/services/api"
 
@@ -40,10 +39,7 @@ const ProfileDoctor: React.FC = () => {
           <ProfessionalDetails doctor={doctor} />
         </div>
         <AvailabilitySchedule />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <NotificationPreferences doctor={doctor} />
-          <AccountSecurity />
-        </div>
+        <AccountSecurity />
       </div>
     </>
   )
