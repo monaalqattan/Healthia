@@ -11,6 +11,7 @@ import {
   Download, Loader2, Target, Scale, ClipboardList,
 } from "lucide-react";
 import { analyticsService } from "@/services/api";
+import Navbar from "@/components/Navbar/Navbar";
 
 ChartJS.register(
   CategoryScale, LinearScale, PointElement,
@@ -75,7 +76,6 @@ const Analytics: React.FC = () => {
     plugins: { legend: { display: false } },
   };
 
-  // ── Chart Data ────────────────────────────────
   const patientActivityData = {
     labels: data?.patientsByMonth ? buildMonthlyLabels(data.patientsByMonth) : ["No data"],
     datasets: [{
@@ -101,7 +101,6 @@ const Analytics: React.FC = () => {
     }],
   };
 
-  // BMI Distribution chart
   const bmiDist = data?.bmiDistribution || {};
   const bmiChartData = {
     labels: ["Underweight", "Normal", "Overweight", "Obese"],
@@ -113,7 +112,6 @@ const Analytics: React.FC = () => {
     }],
   };
 
-  // Diet Plan coverage chart
   const planCoverage = {
     labels: ["With Plan", "Without Plan"],
     datasets: [{
@@ -124,7 +122,6 @@ const Analytics: React.FC = () => {
     }],
   };
 
-  // Online vs Offline
   const onlineCount  = data?.clientTypeStats?.find((c: any) => c._id === "online")?.count  || 0;
   const offlineCount = data?.clientTypeStats?.find((c: any) => c._id === "offline")?.count || 0;
   const totalForPct  = onlineCount + offlineCount || 1;
@@ -145,7 +142,6 @@ const Analytics: React.FC = () => {
       : 0
     : 0;
 
-  // BMI category label
   const avgBMI = data?.avgBMI || 0;
   const bmiLabel = avgBMI < 18.5 ? { label: "Underweight", color: "text-blue-500" }
     : avgBMI < 25 ? { label: "Normal", color: "text-green-600" }
@@ -215,7 +211,6 @@ const Analytics: React.FC = () => {
       </div>
     </div>
 
-    <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-box">
         <div class="stat-label">Total Patients</div>
@@ -240,7 +235,6 @@ const Analytics: React.FC = () => {
     </div>
 
     <div class="grid-2">
-      <!-- Patient Goals -->
       <div class="section">
         <h2>Patient Goals</h2>
         <table>
@@ -248,8 +242,6 @@ const Analytics: React.FC = () => {
           ${goalsRows}
         </table>
       </div>
-
-      <!-- Category Breakdown -->
       <div class="section">
         <h2>Category Breakdown</h2>
         <table>
@@ -260,7 +252,6 @@ const Analytics: React.FC = () => {
     </div>
 
     <div class="grid-2">
-      <!-- BMI Overview -->
       <div class="section">
         <h2>BMI Overview &nbsp;<span style="color:#065F46;font-size:13px">Avg: ${avgBMI_} — ${bmiLabel_}</span></h2>
         ${[
@@ -277,8 +268,6 @@ const Analytics: React.FC = () => {
           </div>`;
         }).join("")}
       </div>
-
-      <!-- Diet Plan Coverage -->
       <div class="section">
         <h2>Diet Plan Coverage</h2>
         <div style="display:flex;align-items:center;gap:16px;margin-top:8px">
@@ -293,7 +282,6 @@ const Analytics: React.FC = () => {
       </div>
     </div>
 
-    <!-- Patients Needing Attention -->
     <div class="section">
       <h2>⚠ Patients Needing Attention <span style="font-size:12px;color:#f97316">(missing weight or height)</span></h2>
       <table>
@@ -302,7 +290,6 @@ const Analytics: React.FC = () => {
       </table>
     </div>
 
-    <!-- Appointment Summary -->
     <div class="section">
       <h2>Appointment Summary</h2>
       <div style="display:flex;gap:16px;margin-top:8px">
@@ -334,356 +321,356 @@ const Analytics: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50 px-4 py-5 md:px-8 md:py-7">
+    <div className="min-h-screen bg-gray-50">
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
-        <div>
-          <h1 className="text-3xl font-extrabold text-gray-900 leading-tight">
-            Practice<br />Analytics
-          </h1>
-          <p className="text-sm text-gray-400 mt-1">Live overview of your patients and appointments.</p>
+      {/* ✅ Navbar */}
+      <Navbar />
+
+      {/* Page Content */}
+      <div className="px-4 py-5 md:px-8 md:py-7">
+
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 className="text-3xl font-extrabold text-gray-900 leading-tight">
+              Practice<br />Analytics
+            </h1>
+            <p className="text-sm text-gray-400 mt-1">Live overview of your patients and appointments.</p>
+          </div>
+          <button
+            onClick={handleExportPDF}
+            className="self-start flex items-center gap-2 border border-gray-200 bg-white rounded-lg px-3 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 transition-colors"
+          >
+            <Download size={15} className="text-green-700" />
+            Export Report
+          </button>
         </div>
-        <button
-          onClick={handleExportPDF}
-          className="self-start flex items-center gap-2 border border-gray-200 bg-white rounded-lg px-3 py-2 text-sm font-medium text-gray-600 shadow-sm hover:bg-gray-50 transition-colors"
-        >
-          <Download size={15} className="text-green-700" />
-          Export Report
-        </button>
-      </div>
 
-      {/* Stats Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        <StatCard
-          title="Total Patients"   value={data?.totalPatients ?? "—"}
-          change={`+${data?.newPatientsThisMonth ?? 0} this month`} positive={true}
-          icon={<Users size={18} />} isLoading={isLoading} />
-        <StatCard
-          title="Active Plans"     value={data?.activePlans ?? "—"}
-          change="Currently active" positive={true}
-          icon={<Activity size={18} />} isLoading={isLoading} />
-        <StatCard
-          title="Appointments"     value={data?.totalAppointments ?? "—"}
-          change={`${data?.completedAppointments ?? 0} completed`} positive={true}
-          icon={<TrendingUp size={18} />} isLoading={isLoading} />
-        <StatCard
-          title="Completion Rate"  value={`${completionRate}%`}
-          change={`${data?.cancelledAppointments ?? 0} cancelled`}
-          positive={completionRate >= 50}
-          icon={<Heart size={18} />} isLoading={isLoading} />
-      </div>
-
-      {isLoading ? (
-        <div className="flex items-center justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
+          <StatCard
+            title="Total Patients"   value={data?.totalPatients ?? "—"}
+            change={`+${data?.newPatientsThisMonth ?? 0} this month`} positive={true}
+            icon={<Users size={18} />} isLoading={isLoading} />
+          <StatCard
+            title="Active Plans"     value={data?.activePlans ?? "—"}
+            change="Currently active" positive={true}
+            icon={<Activity size={18} />} isLoading={isLoading} />
+          <StatCard
+            title="Appointments"     value={data?.totalAppointments ?? "—"}
+            change={`${data?.completedAppointments ?? 0} completed`} positive={true}
+            icon={<TrendingUp size={18} />} isLoading={isLoading} />
+          <StatCard
+            title="Completion Rate"  value={`${completionRate}%`}
+            change={`${data?.cancelledAppointments ?? 0} cancelled`}
+            positive={completionRate >= 50}
+            icon={<Heart size={18} />} isLoading={isLoading} />
         </div>
-      ) : (
-        <>
-          {/* Row 1: New Patients + Appointments */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-bold text-gray-800 mb-4">New Patients per Month</h2>
-              <div style={{ height: 200 }}>
-                {data?.patientsByMonth?.length > 0
-                  ? <Line data={patientActivityData} options={chartOptions} />
-                  : <div className="flex items-center justify-center h-full text-gray-300 text-sm">No data yet</div>
-                }
-              </div>
-            </div>
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-bold text-gray-800 mb-4">Appointments per Month</h2>
-              <div style={{ height: 200 }}>
-                {data?.appointmentsByMonth?.length > 0
-                  ? <Bar data={appointmentsData} options={chartOptions} />
-                  : <div className="flex items-center justify-center h-full text-gray-300 text-sm">No data yet</div>
-                }
-              </div>
-            </div>
+
+        {isLoading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="w-8 h-8 animate-spin text-emerald-600" />
           </div>
-
-          {/* Row 2: Client Type + Category */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-bold text-gray-800 mb-4">Client Type Distribution</h2>
-              <div className="flex items-center gap-6">
-                <div className="relative shrink-0" style={{ width: 140, height: 140 }}>
-                  <Doughnut data={clientTypeData} options={donutOptions} />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-xl font-extrabold text-gray-800">{data?.totalPatients}</span>
-                    <span className="text-[10px] text-gray-400 font-semibold">TOTAL</span>
-                  </div>
+        ) : (
+          <>
+            {/* Row 1: New Patients + Appointments */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <h2 className="text-base font-bold text-gray-800 mb-4">New Patients per Month</h2>
+                <div style={{ height: 200 }}>
+                  {data?.patientsByMonth?.length > 0
+                    ? <Line data={patientActivityData} options={chartOptions} />
+                    : <div className="flex items-center justify-center h-full text-gray-300 text-sm">No data yet</div>
+                  }
                 </div>
-                <div className="flex flex-col gap-3">
-                  {[
-                    { label: "Online",  count: onlineCount,  pct: Math.round((onlineCount / totalForPct) * 100),  color: "bg-[#016333]" },
-                    { label: "Offline", count: offlineCount, pct: Math.round((offlineCount / totalForPct) * 100), color: "bg-green-300" },
-                  ].map(item => (
-                    <div key={item.label}>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
-                        <span className="text-sm text-gray-600 font-medium">{item.label}</span>
-                        <span className="ml-auto text-sm font-bold text-gray-800">{item.count}</span>
-                      </div>
-                      <div className="w-32 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                        <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.pct}%` }} />
-                      </div>
-                    </div>
-                  ))}
+              </div>
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <h2 className="text-base font-bold text-gray-800 mb-4">Appointments per Month</h2>
+                <div style={{ height: 200 }}>
+                  {data?.appointmentsByMonth?.length > 0
+                    ? <Bar data={appointmentsData} options={chartOptions} />
+                    : <div className="flex items-center justify-center h-full text-gray-300 text-sm">No data yet</div>
+                  }
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <h2 className="text-base font-bold text-gray-800 mb-4">Category Breakdown</h2>
-              {data?.categoryStats?.length > 0 ? (
-                <div className="flex flex-col gap-3">
-                  {data.categoryStats.map((cat: any, i: number) => {
-                    const pct = Math.round((cat.count / (data.totalPatients || 1)) * 100);
-                    const colors = ["bg-emerald-600", "bg-green-400", "bg-teal-500", "bg-lime-500"];
-                    return (
-                      <div key={i}>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-gray-600 font-medium">{cat._id || "Unspecified"}</span>
-                          <span className="text-xs font-bold text-gray-700">{cat.count} ({pct}%)</span>
+            {/* Row 2: Client Type + Category */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <h2 className="text-base font-bold text-gray-800 mb-4">Client Type Distribution</h2>
+                <div className="flex items-center gap-6">
+                  <div className="relative shrink-0" style={{ width: 140, height: 140 }}>
+                    <Doughnut data={clientTypeData} options={donutOptions} />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                      <span className="text-xl font-extrabold text-gray-800">{data?.totalPatients}</span>
+                      <span className="text-[10px] text-gray-400 font-semibold">TOTAL</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-3">
+                    {[
+                      { label: "Online",  count: onlineCount,  pct: Math.round((onlineCount / totalForPct) * 100),  color: "bg-[#016333]" },
+                      { label: "Offline", count: offlineCount, pct: Math.round((offlineCount / totalForPct) * 100), color: "bg-green-300" },
+                    ].map(item => (
+                      <div key={item.label}>
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
+                          <span className="text-sm text-gray-600 font-medium">{item.label}</span>
+                          <span className="ml-auto text-sm font-bold text-gray-800">{item.count}</span>
                         </div>
-                        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full ${colors[i % colors.length]}`} style={{ width: `${pct}%` }} />
+                        <div className="w-32 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                          <div className={`h-full rounded-full ${item.color}`} style={{ width: `${item.pct}%` }} />
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="flex items-center justify-center h-24 text-gray-300 text-sm">No data yet</div>
-              )}
-            </div>
-          </div>
-
-          {/* ✅ Row 3: BMI + Diet Plan Coverage */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-
-            {/* BMI Distribution */}
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <Scale size={16} className="text-green-700" />
-                <h2 className="text-base font-bold text-gray-800">Patient BMI Overview</h2>
-              </div>
-              <div className="flex items-center gap-6">
-                <div className="relative shrink-0" style={{ width: 140, height: 140 }}>
-                  <Doughnut data={bmiChartData} options={donutOptions} />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-xl font-extrabold text-gray-800">{avgBMI > 0 ? avgBMI : "—"}</span>
-                    <span className="text-[10px] text-gray-400 font-semibold">AVG BMI</span>
-                    {avgBMI > 0 && <span className={`text-[9px] font-bold ${bmiLabel.color}`}>{bmiLabel.label}</span>}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2.5 flex-1">
-                  {[
-                    { label: "Underweight", key: "underweight", color: "bg-blue-400",   text: "text-blue-600"   },
-                    { label: "Normal",      key: "normal",      color: "bg-green-500",  text: "text-green-600"  },
-                    { label: "Overweight",  key: "overweight",  color: "bg-yellow-400", text: "text-yellow-600" },
-                    { label: "Obese",       key: "obese",       color: "bg-red-400",    text: "text-red-500"    },
-                  ].map(item => {
-                    const count = bmiDist[item.key] || 0;
-                    const total = (bmiDist.underweight + bmiDist.normal + bmiDist.overweight + bmiDist.obese) || 1;
-                    const pct   = Math.round((count / (data?.totalPatients || 1)) * 100);
-                    return (
-                      <div key={item.key}>
-                        <div className="flex justify-between items-center mb-0.5">
-                          <span className={`text-xs font-semibold ${item.text}`}>{item.label}</span>
-                          <span className="text-xs text-gray-500">{count} patients</span>
-                        </div>
-                        <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full ${item.color}`} style={{ width: `${pct}%` }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
-            {/* Diet Plan Coverage */}
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <ClipboardList size={16} className="text-green-700" />
-                <h2 className="text-base font-bold text-gray-800">Diet Plan Coverage</h2>
-              </div>
-              <div className="flex items-center gap-6">
-                <div className="relative shrink-0" style={{ width: 140, height: 140 }}>
-                  <Doughnut data={planCoverage} options={donutOptions} />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                    <span className="text-xl font-extrabold text-gray-800">
-                      {data?.totalPatients > 0
-                        ? Math.round((data.patientsWithPlanCount / data.totalPatients) * 100)
-                        : 0}%
-                    </span>
-                    <span className="text-[10px] text-gray-400 font-semibold">COVERAGE</span>
-                  </div>
-                </div>
-                <div className="flex flex-col gap-4 flex-1">
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-xs font-semibold text-green-700">With Diet Plan</span>
-                      <span className="text-xs text-gray-500">{data?.patientsWithPlanCount || 0} patients</span>
-                    </div>
-                    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-[#016333] rounded-full"
-                        style={{ width: `${data?.totalPatients > 0 ? Math.round((data.patientsWithPlanCount / data.totalPatients) * 100) : 0}%` }} />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="flex justify-between mb-1">
-                      <span className="text-xs font-semibold text-gray-400">Without Plan</span>
-                      <span className="text-xs text-gray-500">{data?.patientsWithoutPlan || 0} patients</span>
-                    </div>
-                    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                      <div className="h-full bg-gray-300 rounded-full"
-                        style={{ width: `${data?.totalPatients > 0 ? Math.round((data.patientsWithoutPlan / data.totalPatients) * 100) : 0}%` }} />
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
 
-          {/* ✅ Row 4: Goals Distribution + Program Distribution */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-
-            {/* Goals Distribution */}
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <Target size={16} className="text-green-700" />
-                <h2 className="text-base font-bold text-gray-800">Patient Goals</h2>
-              </div>
-              {data?.goalsStats?.length > 0 ? (
-                <div className="flex flex-col gap-3">
-                  {data.goalsStats.map((g: any, i: number) => {
-                    const pct = Math.round((g.count / (data.totalPatients || 1)) * 100);
-                    const colors = ["bg-emerald-600", "bg-green-400", "bg-teal-500", "bg-lime-500", "bg-cyan-500"];
-                    return (
-                      <div key={i}>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-gray-600 font-medium">{g.goal}</span>
-                          <span className="text-xs font-bold text-gray-700">{g.count} ({pct}%)</span>
-                        </div>
-                        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full ${colors[i % colors.length]}`} style={{ width: `${pct}%` }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-24 gap-2 text-gray-300">
-                  <Target size={28} />
-                  <p className="text-sm">No goals recorded yet</p>
-                </div>
-              )}
-            </div>
-
-            {/* Program Distribution */}
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <div className="flex items-center gap-2 mb-4">
-                <Trophy size={16} className="text-green-700" />
-                <h2 className="text-base font-bold text-gray-800">Program Distribution</h2>
-              </div>
-              {data?.periodStats?.length > 0 ? (
-                <div className="flex flex-col gap-3">
-                  {data.periodStats.map((p: any, i: number) => {
-                    const pct = Math.round((p.count / (data.totalPatients || 1)) * 100);
-                    const colors = ["bg-emerald-600", "bg-green-400", "bg-teal-500", "bg-lime-500"];
-                    return (
-                      <div key={i}>
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-gray-600 font-medium">{p._id || "Unspecified"}</span>
-                          <span className="text-xs font-bold text-gray-700">{p.count} ({pct}%)</span>
-                        </div>
-                        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div className={`h-full rounded-full ${colors[i % colors.length]}`} style={{ width: `${pct}%` }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                <div className="flex items-center justify-center h-24 text-gray-300 text-sm">No data yet</div>
-              )}
-            </div>
-          </div>
-
-          {/* Row 5: Patients at Risk + Appointment Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="flex items-center gap-2 text-base font-bold text-gray-800">
-                  <AlertTriangle size={16} className="text-orange-500" /> Patients Needing Attention
-                </h2>
-                {data?.patientsAtRisk?.length > 0 && (
-                  <span className="text-[10px] font-bold bg-orange-100 text-orange-600 px-2.5 py-1 rounded-full">
-                    {data.patientsAtRisk.length} FLAGGED
-                  </span>
-                )}
-              </div>
-              {data?.patientsAtRisk?.length > 0 ? (
-                <div className="flex flex-col gap-3">
-                  {data.patientsAtRisk.map((p: any) => (
-                    <div key={p._id} className="flex items-center justify-between gap-3 py-2 border-b border-gray-50 last:border-0">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                          {p.name ? p.name[0].toUpperCase() : "P"}
-                        </div>
-                        <div>
-                          <div className="text-sm font-semibold text-gray-800">{p.name}</div>
-                          <div className="text-xs text-orange-500">
-                            {!p.weight || p.weight === 0 ? "⚠ Weight not recorded" : "⚠ Height not recorded"}
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <h2 className="text-base font-bold text-gray-800 mb-4">Category Breakdown</h2>
+                {data?.categoryStats?.length > 0 ? (
+                  <div className="flex flex-col gap-3">
+                    {data.categoryStats.map((cat: any, i: number) => {
+                      const pct = Math.round((cat.count / (data.totalPatients || 1)) * 100);
+                      const colors = ["bg-emerald-600", "bg-green-400", "bg-teal-500", "bg-lime-500"];
+                      return (
+                        <div key={i}>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-xs text-gray-600 font-medium">{cat._id || "Unspecified"}</span>
+                            <span className="text-xs font-bold text-gray-700">{cat.count} ({pct}%)</span>
+                          </div>
+                          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${colors[i % colors.length]}`} style={{ width: `${pct}%` }} />
                           </div>
                         </div>
-                      </div>
-                      <span className="text-xs font-mono text-gray-400">{p.patientId}</span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div className="flex items-center justify-center py-8 text-green-600 text-sm font-medium">
-                  ✓ All patients have complete records
-                </div>
-              )}
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-24 text-gray-300 text-sm">No data yet</div>
+                )}
+              </div>
             </div>
 
-            <div className="bg-white rounded-xl p-5 shadow-sm">
-              <h2 className="flex items-center gap-2 text-base font-bold text-gray-800 mb-4">
-                <Trophy size={16} className="text-green-700" /> Appointment Summary
-              </h2>
-              <div className="flex flex-col gap-3">
-                {[
-                  { label: "Scheduled", value: data?.scheduledAppointments  ?? 0, color: "bg-blue-500",  bg: "bg-blue-50",  text: "text-blue-700"  },
-                  { label: "Completed", value: data?.completedAppointments  ?? 0, color: "bg-green-500", bg: "bg-green-50", text: "text-green-700" },
-                  { label: "Cancelled", value: data?.cancelledAppointments  ?? 0, color: "bg-red-400",   bg: "bg-red-50",   text: "text-red-600"   },
-                ].map(item => (
-                  <div key={item.label} className={`flex items-center justify-between px-4 py-3 rounded-xl ${item.bg}`}>
-                    <div className="flex items-center gap-3">
-                      <div className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
-                      <span className={`text-sm font-semibold ${item.text}`}>{item.label}</span>
+            {/* Row 3: BMI + Diet Plan Coverage */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <Scale size={16} className="text-green-700" />
+                  <h2 className="text-base font-bold text-gray-800">Patient BMI Overview</h2>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="relative shrink-0" style={{ width: 140, height: 140 }}>
+                    <Doughnut data={bmiChartData} options={donutOptions} />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                      <span className="text-xl font-extrabold text-gray-800">{avgBMI > 0 ? avgBMI : "—"}</span>
+                      <span className="text-[10px] text-gray-400 font-semibold">AVG BMI</span>
+                      {avgBMI > 0 && <span className={`text-[9px] font-bold ${bmiLabel.color}`}>{bmiLabel.label}</span>}
                     </div>
-                    <span className={`text-xl font-bold ${item.text}`}>{item.value}</span>
                   </div>
-                ))}
-                <div className="mt-2 pt-3 border-t border-gray-100">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-xs text-gray-500 font-medium">Completion Rate</span>
-                    <span className="text-xs font-bold text-gray-700">{completionRate}%</span>
+                  <div className="flex flex-col gap-2.5 flex-1">
+                    {[
+                      { label: "Underweight", key: "underweight", color: "bg-blue-400",   text: "text-blue-600"   },
+                      { label: "Normal",      key: "normal",      color: "bg-green-500",  text: "text-green-600"  },
+                      { label: "Overweight",  key: "overweight",  color: "bg-yellow-400", text: "text-yellow-600" },
+                      { label: "Obese",       key: "obese",       color: "bg-red-400",    text: "text-red-500"    },
+                    ].map(item => {
+                      const count = bmiDist[item.key] || 0;
+                      const pct   = Math.round((count / (data?.totalPatients || 1)) * 100);
+                      return (
+                        <div key={item.key}>
+                          <div className="flex justify-between items-center mb-0.5">
+                            <span className={`text-xs font-semibold ${item.text}`}>{item.label}</span>
+                            <span className="text-xs text-gray-500">{count} patients</span>
+                          </div>
+                          <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${item.color}`} style={{ width: `${pct}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                    <div className="h-full bg-green-600 rounded-full transition-all" style={{ width: `${completionRate}%` }} />
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <ClipboardList size={16} className="text-green-700" />
+                  <h2 className="text-base font-bold text-gray-800">Diet Plan Coverage</h2>
+                </div>
+                <div className="flex items-center gap-6">
+                  <div className="relative shrink-0" style={{ width: 140, height: 140 }}>
+                    <Doughnut data={planCoverage} options={donutOptions} />
+                    <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                      <span className="text-xl font-extrabold text-gray-800">
+                        {data?.totalPatients > 0
+                          ? Math.round((data.patientsWithPlanCount / data.totalPatients) * 100)
+                          : 0}%
+                      </span>
+                      <span className="text-[10px] text-gray-400 font-semibold">COVERAGE</span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-4 flex-1">
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-xs font-semibold text-green-700">With Diet Plan</span>
+                        <span className="text-xs text-gray-500">{data?.patientsWithPlanCount || 0} patients</span>
+                      </div>
+                      <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-[#016333] rounded-full"
+                          style={{ width: `${data?.totalPatients > 0 ? Math.round((data.patientsWithPlanCount / data.totalPatients) * 100) : 0}%` }} />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="flex justify-between mb-1">
+                        <span className="text-xs font-semibold text-gray-400">Without Plan</span>
+                        <span className="text-xs text-gray-500">{data?.patientsWithoutPlan || 0} patients</span>
+                      </div>
+                      <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div className="h-full bg-gray-300 rounded-full"
+                          style={{ width: `${data?.totalPatients > 0 ? Math.round((data.patientsWithoutPlan / data.totalPatients) * 100) : 0}%` }} />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </>
-      )}
+
+            {/* Row 4: Goals + Program Distribution */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <Target size={16} className="text-green-700" />
+                  <h2 className="text-base font-bold text-gray-800">Patient Goals</h2>
+                </div>
+                {data?.goalsStats?.length > 0 ? (
+                  <div className="flex flex-col gap-3">
+                    {data.goalsStats.map((g: any, i: number) => {
+                      const pct = Math.round((g.count / (data.totalPatients || 1)) * 100);
+                      const colors = ["bg-emerald-600", "bg-green-400", "bg-teal-500", "bg-lime-500", "bg-cyan-500"];
+                      return (
+                        <div key={i}>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-xs text-gray-600 font-medium">{g.goal}</span>
+                            <span className="text-xs font-bold text-gray-700">{g.count} ({pct}%)</span>
+                          </div>
+                          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${colors[i % colors.length]}`} style={{ width: `${pct}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center justify-center h-24 gap-2 text-gray-300">
+                    <Target size={28} />
+                    <p className="text-sm">No goals recorded yet</p>
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <div className="flex items-center gap-2 mb-4">
+                  <Trophy size={16} className="text-green-700" />
+                  <h2 className="text-base font-bold text-gray-800">Program Distribution</h2>
+                </div>
+                {data?.periodStats?.length > 0 ? (
+                  <div className="flex flex-col gap-3">
+                    {data.periodStats.map((p: any, i: number) => {
+                      const pct = Math.round((p.count / (data.totalPatients || 1)) * 100);
+                      const colors = ["bg-emerald-600", "bg-green-400", "bg-teal-500", "bg-lime-500"];
+                      return (
+                        <div key={i}>
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="text-xs text-gray-600 font-medium">{p._id || "Unspecified"}</span>
+                            <span className="text-xs font-bold text-gray-700">{p.count} ({pct}%)</span>
+                          </div>
+                          <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                            <div className={`h-full rounded-full ${colors[i % colors.length]}`} style={{ width: `${pct}%` }} />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center h-24 text-gray-300 text-sm">No data yet</div>
+                )}
+              </div>
+            </div>
+
+            {/* Row 5: Patients at Risk + Appointment Summary */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <div className="flex justify-between items-center mb-4">
+                  <h2 className="flex items-center gap-2 text-base font-bold text-gray-800">
+                    <AlertTriangle size={16} className="text-orange-500" /> Patients Needing Attention
+                  </h2>
+                  {data?.patientsAtRisk?.length > 0 && (
+                    <span className="text-[10px] font-bold bg-orange-100 text-orange-600 px-2.5 py-1 rounded-full">
+                      {data.patientsAtRisk.length} FLAGGED
+                    </span>
+                  )}
+                </div>
+                {data?.patientsAtRisk?.length > 0 ? (
+                  <div className="flex flex-col gap-3">
+                    {data.patientsAtRisk.map((p: any) => (
+                      <div key={p._id} className="flex items-center justify-between gap-3 py-2 border-b border-gray-50 last:border-0">
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 rounded-full bg-emerald-700 flex items-center justify-center text-white text-xs font-bold shrink-0">
+                            {p.name ? p.name[0].toUpperCase() : "P"}
+                          </div>
+                          <div>
+                            <div className="text-sm font-semibold text-gray-800">{p.name}</div>
+                            <div className="text-xs text-orange-500">
+                              {!p.weight || p.weight === 0 ? "⚠ Weight not recorded" : "⚠ Height not recorded"}
+                            </div>
+                          </div>
+                        </div>
+                        <span className="text-xs font-mono text-gray-400">{p.patientId}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center py-8 text-green-600 text-sm font-medium">
+                    ✓ All patients have complete records
+                  </div>
+                )}
+              </div>
+
+              <div className="bg-white rounded-xl p-5 shadow-sm">
+                <h2 className="flex items-center gap-2 text-base font-bold text-gray-800 mb-4">
+                  <Trophy size={16} className="text-green-700" /> Appointment Summary
+                </h2>
+                <div className="flex flex-col gap-3">
+                  {[
+                    { label: "Scheduled", value: data?.scheduledAppointments  ?? 0, color: "bg-blue-500",  bg: "bg-blue-50",  text: "text-blue-700"  },
+                    { label: "Completed", value: data?.completedAppointments  ?? 0, color: "bg-green-500", bg: "bg-green-50", text: "text-green-700" },
+                    { label: "Cancelled", value: data?.cancelledAppointments  ?? 0, color: "bg-red-400",   bg: "bg-red-50",   text: "text-red-600"   },
+                  ].map(item => (
+                    <div key={item.label} className={`flex items-center justify-between px-4 py-3 rounded-xl ${item.bg}`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`w-2.5 h-2.5 rounded-full ${item.color}`} />
+                        <span className={`text-sm font-semibold ${item.text}`}>{item.label}</span>
+                      </div>
+                      <span className={`text-xl font-bold ${item.text}`}>{item.value}</span>
+                    </div>
+                  ))}
+                  <div className="mt-2 pt-3 border-t border-gray-100">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs text-gray-500 font-medium">Completion Rate</span>
+                      <span className="text-xs font-bold text-gray-700">{completionRate}%</span>
+                    </div>
+                    <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full bg-green-600 rounded-full transition-all" style={{ width: `${completionRate}%` }} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

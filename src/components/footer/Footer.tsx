@@ -9,13 +9,13 @@ const Footer: React.FC = () => {
             Healthia Vitality
           </h4>
           <p className="m-0 text-[13px] leading-relaxed text-[#6b7a90]">
-            © 2024 Healthia Vitality. Cultivating wellness through
+            © 2026 Healthia Vitality. Cultivating wellness through
             <br />
             organic care.
           </p>
         </div>
 
-        <div className="flex flex-row items-center gap-6 max-md:flex-col max-md:gap-3">
+        {/* <div className="flex flex-row items-center gap-6 max-md:flex-col max-md:gap-3">
           <a
             href="#"
             className="text-[13px] font-normal tracking-wide text-[#6b7a90] no-underline transition-all duration-200 hover:-translate-y-0.5 hover:text-[#1B7A4B] hover:underline"
@@ -28,15 +28,15 @@ const Footer: React.FC = () => {
           >
             Terms of Service
           </a>
-        </div>
+        </div> */}
 
         <div className="flex flex-row items-center gap-6 max-md:flex-col max-md:gap-3">
-          <a
+          {/* <a
             href="#"
             className="text-[13px] font-normal tracking-wide text-[#6b7a90] no-underline transition-all duration-200 hover:-translate-y-0.5 hover:text-[#1B7A4B] hover:underline"
           >
             Accessibility
-          </a>
+          </a> */}
           <a
             href="#"
             className="text-[13px] font-normal tracking-wide text-[#6b7a90] no-underline transition-all duration-200 hover:-translate-y-0.5 hover:text-[#1B7A4B] hover:underline"
