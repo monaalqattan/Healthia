@@ -142,3 +142,11 @@ export const notificationService = {
   markAllRead: () => api.put('/notifications/read-all'),
   delete:      (id: string) => api.delete(`/notifications/${id}`),
 }
+
+// ── Support ───────────────────────────
+export const supportService = {
+  createTicket: (data: { name: string; email: string; type: string; message: string }) =>
+    api.post('/support', data),
+  getAllTickets: () => api.get('/support'),
+  updateStatus:  (id: string, status: string) => api.put(`/support/${id}/status`, { status }),
+}

@@ -2,6 +2,7 @@ import { useState } from "react"
 import AuthNav from "../../components/AuthNav"
 import Footer from "../../components/footer/Footer"
 import leafImg from "../../assets/1.png"
+import api from "@/services/api"
 
 const faqs = [
   {
@@ -30,20 +31,33 @@ export default function Support() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
   const [form, setForm] = useState({ name: "", email: "", type: "", message: "" })
   const [submitted, setSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const set = (key: string, val: string) => setForm(p => ({ ...p, [key]: val }))
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.name || !form.email || !form.type || !form.message) return
-    setSubmitted(true)
-    setForm({ name: "", email: "", type: "", message: "" })
-    setTimeout(() => setSubmitted(false), 4000)
+    setError("")
+    if (!form.name || !form.email || !form.type || !form.message) {
+      setError("Please fill in all fields")
+      return
+    }
+    setIsLoading(true)
+    try {
+      await api.post("/support", form)
+      setSubmitted(true)
+      setForm({ name: "", email: "", type: "", message: "" })
+      setTimeout(() => setSubmitted(false), 4000)
+    } catch (err: any) {
+      setError(err.response?.data?.message || "Something went wrong, please try again")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <div className="min-h-screen bg-[#f0f4f0] relative overflow-hidden">
-      {/* Background leaf */}
       <img
         src={leafImg}
         alt=""
@@ -53,7 +67,6 @@ export default function Support() {
       <AuthNav />
 
       <div className="relative z-10 mx-auto max-w-5xl px-6 py-12">
-        {/* Header */}
         <div className="mb-10 text-center">
           <h1 className="text-3xl font-bold text-gray-800">How can we help you?</h1>
           <p className="mt-2 text-gray-500">Fill out the form below or browse the FAQ section</p>
@@ -69,13 +82,15 @@ export default function Support() {
                 ✓ Message sent! We'll get back to you within 24 hours.
               </div>
             )}
+            {error && (
+              <div className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm font-semibold text-red-600">
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              {/* Name */}
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-                  Full Name
-                </label>
+                <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Full Name</label>
                 <input
                   type="text"
                   value={form.name}
@@ -85,11 +100,8 @@ export default function Support() {
                 />
               </div>
 
-              {/* Email */}
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-                  Email Address
-                </label>
+                <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Email Address</label>
                 <input
                   type="email"
                   value={form.email}
@@ -99,11 +111,8 @@ export default function Support() {
                 />
               </div>
 
-              {/* Issue Type */}
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-                  Issue Type
-                </label>
+                <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Issue Type</label>
                 <select
                   value={form.type}
                   onChange={e => set("type", e.target.value)}
@@ -118,11 +127,8 @@ export default function Support() {
                 </select>
               </div>
 
-              {/* Message */}
               <div className="flex flex-col gap-1">
-                <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">
-                  Message
-                </label>
+                <label className="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Message</label>
                 <textarea
                   rows={4}
                   value={form.message}
@@ -134,9 +140,10 @@ export default function Support() {
 
               <button
                 type="submit"
-                className="mt-2 rounded-xl bg-[#065F46] py-3 text-sm font-bold text-white transition-colors hover:bg-[#054d38]"
+                disabled={isLoading}
+                className="mt-2 rounded-xl bg-[#065F46] py-3 text-sm font-bold text-white transition-colors hover:bg-[#054d38] disabled:opacity-60"
               >
-                Send Message
+                {isLoading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

@@ -28,7 +28,8 @@ import ClientProfile from "./pages/CLIENT-SIDE/Client-Profile"
 import PatientBookAppointment from "./pages/CLIENT-SIDE/BookAppointment"
 
 import AdminDashboard from "./pages/Admin/AdminDashboard"
-import Support from "./pages/Support/Support"
+import AdminSupport   from "./pages/Admin/AdminSupport"
+import Support        from "./pages/Support/Support"
 import AdminDoctors   from "./pages/Admin/AdminDoctors"
 import AdminPatients  from "./pages/Admin/AdminPatients"
 
@@ -116,6 +117,7 @@ export const router = createBrowserRouter([
       { index: true, element: <AdminDashboard /> },
       { path: "doctors",  element: <AdminDoctors />  },
       { path: "patients", element: <AdminPatients /> },
+      { path: "support",  element: <AdminSupport />  },
     ],
   },
 

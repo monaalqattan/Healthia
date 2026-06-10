@@ -7,7 +7,8 @@ import {
   LogOut,
   Menu,
   X,
-  Stethoscope
+  Stethoscope,
+  MessageSquare
 } from 'lucide-react'
 
 export default function AdminLayout() {
@@ -67,6 +68,19 @@ export default function AdminLayout() {
           >
             <Users size={20} />
             {sidebarOpen && <span>Patients</span>}
+          </NavLink>
+
+
+          <NavLink
+            to="/admin/support"
+            className={({ isActive }) =>
+              `flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                isActive ? 'bg-white/20 font-semibold' : 'hover:bg-white/10'
+              }`
+            }
+          >
+            <MessageSquare size={20} />
+            {sidebarOpen && <span>Support</span>}
           </NavLink>
         </nav>
 
