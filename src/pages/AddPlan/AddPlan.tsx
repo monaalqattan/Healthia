@@ -87,8 +87,8 @@ export default function AddPlan() {
         if (plan.calculatorData) {
           const cd = plan.calculatorData;
           if (cd.equation) setEquation(cd.equation as any);
-          const fields = ['firstName','lastName','gender','goal','weight','height','age','activityLevel','calorieDef','bodyFat','neck','waist'];
-          fields.forEach(f => { if (cd[f] !== undefined) handleFormChange(f, String(cd[f])); });
+          const fields = ['firstName','lastName','gender','goal','weight','height','age','activity','deficit','bodyfat','neck','waist'];
+          fields.forEach(f => { if (cd[f] !== undefined) handleFormChange(f as keyof PatientForm, String(cd[f])); });
         }
         // استرجع startDate
         if (plan.startDate) {
@@ -215,7 +215,7 @@ export default function AddPlan() {
     if (plan.calculatorData) {
       const cd = plan.calculatorData;
       if (cd.equation) setEquation(cd.equation as any);
-      const fields = ['firstName','lastName','gender','goal','weight','height','age','activityLevel','calorieDef','bodyFat','neck','waist'];
+      const fields = ['firstName','lastName','gender','goal','weight','height','age','activity','deficit','bodyfat','neck','waist'];
       fields.forEach((f: string) => { if (cd[f] !== undefined) handleFormChange(f as any, String(cd[f])); });
     }
 
@@ -297,9 +297,9 @@ export default function AddPlan() {
         weight:        parseFloat(form.weight as any) || 0,
         height:        parseFloat(form.height as any) || 0,
         age:           parseFloat(form.age as any) || 0,
-        activityLevel: form.activityLevel,
-        calorieDef:    parseFloat(form.calorieDef as any) || 0,
-        bodyFat:       parseFloat(form.bodyFat as any) || 0,
+        activityLevel: form.activity,
+        calorieDef:    parseFloat(form.deficit as any) || 0,
+        bodyFat:       parseFloat(form.bodyfat as any) || 0,
         neck:          parseFloat(form.neck as any) || 0,
         waist:         parseFloat(form.waist as any) || 0,
       },
