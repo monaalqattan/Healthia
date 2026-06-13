@@ -1,6 +1,9 @@
 import * as React from "react"
 
-interface SliderProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface SliderProps extends Omit<
+  React.InputHTMLAttributes<HTMLInputElement>,
+  "value" | "onChange"
+> {
   value?: number[]
   onValueChange?: (value: number[]) => void
   min?: number
@@ -9,7 +12,18 @@ interface SliderProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
-  ({ value = [0], onValueChange, min = 0, max = 100, step = 1, className, ...props }, ref) => {
+  (
+    {
+      value = [0],
+      onValueChange,
+      min = 0,
+      max = 100,
+      step = 1,
+      className,
+      ...props
+    },
+    ref
+  ) => {
     return (
       <input
         ref={ref}
@@ -19,7 +33,7 @@ export const Slider = React.forwardRef<HTMLInputElement, SliderProps>(
         step={step}
         value={value[0]}
         onChange={(e) => onValueChange?.([Number(e.target.value)])}
-        className={`w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-emerald-600 ${className || ''}`}
+        className={`h-2 w-full cursor-pointer appearance-none rounded-lg bg-gray-200 accent-emerald-600 ${className || ""}`}
         {...props}
       />
     )
