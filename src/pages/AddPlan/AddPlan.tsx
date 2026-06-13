@@ -114,6 +114,13 @@ export default function AddPlan() {
   })()
   const [planStartDate, setPlanStartDate] = useState<string>(todayStr)
 
+  // ─── Define callbacks early to avoid reference errors ───
+  const handleFormChange = useCallback(
+    (key: keyof PatientForm, value: string | number) =>
+      setForm((prev) => ({ ...prev, [key]: value })),
+    []
+  )
+
   // ─── جيب المرضى + افحص editPlanId ───
   useEffect(() => {
     const savedPatientId = localStorage.getItem("selectedPatientId")
@@ -148,10 +155,9 @@ export default function AddPlan() {
 
         // استرجع الـ calculator data
         if (plan.calculatorData) {
-          const cd = plan.calculatorData as Record<string, unknown>
-          if (typeof cd.equation === "string")
-            setEquation(cd.equation as Equation)
-          const fields: Array<keyof PatientForm> = [
+          const cd = plan.calculatorData
+          if (cd.equation) setEquation(cd.equation as any)
+          const fields = [
             "firstName",
             "lastName",
             "gender",
@@ -166,16 +172,8 @@ export default function AddPlan() {
             "waist",
           ]
           fields.forEach((f) => {
-            if (cd[f] !== undefined) handleFormChange(f, String(cd[f]))
-          })
-          const mapped: Record<string, keyof PatientForm> = {
-            activityLevel: "activity",
-            calorieDef: "deficit",
-            bodyFat: "bodyfat",
-          }
-          Object.entries(mapped).forEach(([source, target]) => {
-            if (cd[source] !== undefined)
-              handleFormChange(target, String(cd[source]))
+            if (cd[f] !== undefined)
+              handleFormChange(f as keyof PatientForm, String(cd[f]))
           })
         }
         // استرجع startDate
@@ -248,12 +246,6 @@ export default function AddPlan() {
     0
   )
   const remaining = targets.cal - totalEaten
-
-  const handleFormChange = useCallback(
-    (key: keyof PatientForm, value: string | number) =>
-      setForm((prev) => ({ ...prev, [key]: value })),
-    []
-  )
 
   const handleCalculate = useCallback(() => {
     setTargets(computeTargets({ ...form, equation }))
@@ -337,9 +329,9 @@ export default function AddPlan() {
 
       // استرجع الـ calculator data
       if (plan.calculatorData) {
-        const cd = plan.calculatorData as Record<string, unknown>
+        const cd = plan.calculatorData
         if (cd.equation) setEquation(cd.equation as any)
-        const fields: Array<keyof PatientForm> = [
+        const fields = [
           "firstName",
           "lastName",
           "gender",
@@ -353,17 +345,8 @@ export default function AddPlan() {
           "neck",
           "waist",
         ]
-        fields.forEach((f) => {
-          if (cd[f] !== undefined) handleFormChange(f, String(cd[f]))
-        })
-        const mapped: Record<string, keyof PatientForm> = {
-          activityLevel: "activity",
-          calorieDef: "deficit",
-          bodyFat: "bodyfat",
-        }
-        Object.entries(mapped).forEach(([source, target]) => {
-          if (cd[source] !== undefined)
-            handleFormChange(target, String(cd[source]))
+        fields.forEach((f: string) => {
+          if (cd[f] !== undefined) handleFormChange(f as any, String(cd[f]))
         })
       }
 
@@ -468,14 +451,14 @@ export default function AddPlan() {
         lastName: form.lastName,
         gender: form.gender,
         goal: form.goal,
-        weight: Number(form.weight) || 0,
-        height: Number(form.height) || 0,
-        age: Number(form.age) || 0,
-        activityLevel: String(form.activity),
-        calorieDef: Number(form.deficit) || 0,
-        bodyFat: Number(form.bodyfat) || 0,
-        neck: Number(form.neck) || 0,
-        waist: Number(form.waist) || 0,
+        weight: parseFloat(form.weight as any) || 0,
+        height: parseFloat(form.height as any) || 0,
+        age: parseFloat(form.age as any) || 0,
+        activityLevel: form.activity,
+        calorieDef: parseFloat(form.deficit as any) || 0,
+        bodyFat: parseFloat(form.bodyfat as any) || 0,
+        neck: parseFloat(form.neck as any) || 0,
+        waist: parseFloat(form.waist as any) || 0,
       },
     }
 
