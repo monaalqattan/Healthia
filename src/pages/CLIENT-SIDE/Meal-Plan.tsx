@@ -23,8 +23,8 @@ function getWeekDates(startDate?: string): Record<string, { date: Date; label: s
     })
     return result
   }
-  const [y, m, dd] = startDate.split('-').map(Number)
-  const start = new Date(y, m-1, dd)
+  const start = new Date(startDate)              // ✅ يقبل ISO و YYYY-MM-DD
+  if (isNaN(start.getTime())) return getWeekDates(undefined) // fallback لو التاريخ غير صالح
   // خليها تبدأ من الأحد اللي قبلها أو نفسها
   const startDay = start.getDay() // 0=Sun
   DAYS_ORDER.forEach((day, i) => {
@@ -49,6 +49,7 @@ export default function MealPlanPage() {
   const [isLoading, setIsLoading]       = useState(true)
   const [togglingId, setTogglingId]     = useState<string | null>(null)
   const [markingDay, setMarkingDay]     = useState(false)
+  const [error, setError]               = useState<string | null>(null)
 
   useEffect(() => {
     planService.getMyPlans()
@@ -91,26 +92,17 @@ export default function MealPlanPage() {
   // ✅ المريض يعلّم وجبة معينة
   const toggleMeal = async (mealId: string, current: boolean) => {
     if (!plan) return
+    setError(null)
     setTogglingId(mealId)
     try {
-      await planService.updateMealStatus(plan._id, mealId, !current)
-      setPlans(prev => prev.map((p, i) => {
-        if (i !== activePlanIdx) return p
-        return {
-          ...p,
-          days: p.days?.map((d: any) => ({
-            ...d,
-            meals: d.meals.map((m: any) =>
-              m._id === mealId ? { ...m, completed: !current } : m
-            ),
-            // لو كل الوجبات اتعلمت → اليوم completed تلقائي
-            completed: d.meals.every((m: any) =>
-              m._id === mealId ? !current : m.completed
-            ),
-          })),
-        }
-      }))
-    } catch (err) {
+      const res = await planService.updateMealStatus(plan._id, mealId, !current)
+      // ✅ نعتمد على نسخة الخطة الراجعة من السيرفر (أدق وبتحل مشكلة الوجبات القديمة)
+      const updated = res?.data?.plan
+      if (updated) {
+        setPlans(prev => prev.map((p, i) => (i === activePlanIdx ? updated : p)))
+      }
+    } catch (err: any) {
+      setError(err?.response?.data?.message || 'Could not save the meal. Please try again.')
       console.error(err)
     } finally {
       setTogglingId(null)
@@ -120,21 +112,16 @@ export default function MealPlanPage() {
   // ✅ المريض يعلّم اليوم كله كـ Done
   const handleMarkDayDone = async () => {
     if (!plan || isDayDone) return
+    setError(null)
     setMarkingDay(true)
     try {
-      await markDayCompleted(plan._id, activeDay, true)
-      setPlans(prev => prev.map((p, i) => {
-        if (i !== activePlanIdx) return p
-        return {
-          ...p,
-          days: p.days?.map((d: any) =>
-            d.day === activeDay
-              ? { ...d, completed: true, meals: d.meals.map((m: any) => ({ ...m, completed: true })) }
-              : d
-          ),
-        }
-      }))
-    } catch (err) {
+      const data = await markDayCompleted(plan._id, activeDay, true)
+      const updated = (data as any)?.plan
+      if (updated) {
+        setPlans(prev => prev.map((p, i) => (i === activePlanIdx ? updated : p)))
+      }
+    } catch (err: any) {
+      setError(err?.message || 'Could not complete the day. Please try again.')
       console.error(err)
     } finally {
       setMarkingDay(false)
@@ -161,6 +148,14 @@ export default function MealPlanPage() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+
+      {/* Error banner */}
+      {error && (
+        <div className="mb-4 bg-red-50 border border-red-200 text-red-700 text-sm font-semibold px-4 py-2 rounded-xl flex items-center justify-between gap-3">
+          <span>{error}</span>
+          <button onClick={() => setError(null)} className="text-red-400 hover:text-red-600 text-xs font-bold">✕</button>
+        </div>
+      )}
 
       {/* Header */}
       <div className="mb-5">
