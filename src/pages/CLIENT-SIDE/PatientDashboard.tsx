@@ -113,7 +113,12 @@ export default function PatientDashboard() {
       if (plRes.status === 'fulfilled') {
         const p = plRes.value.data[0] || null
         setPlan(p)
-        setMeals(p?.meals   || [])
+        // ✅ وجبات النهاردة من الـ days (الخطة الجديدة) مش من الحقل القديم plan.meals
+        const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+        const todayKey = DAYS[new Date().getDay()]
+        const todayMeals = p?.days?.find((d: any) => d.day === todayKey)?.meals
+          || p?.meals || []
+        setMeals(todayMeals)
       }
       if (lRes.status  === 'fulfilled') setLogs(lRes.value.data)
       if (aRes.status  === 'fulfilled') setAppointments(aRes.value.data)
