@@ -284,14 +284,14 @@ export default function AddPatientModal({ onClose, onCreate }: Props) {
             </label>
             <div className="relative mt-1">
               <span className="absolute top-1/2 left-3 -translate-y-1/2 text-sm text-gray-400">
-                $
+                EGP
               </span>
               <input
                 value={form.initialPaymentAmount}
                 onChange={(e) => set("initialPaymentAmount", e.target.value)}
                 type="number"
                 placeholder="0.00"
-                className="w-full rounded-lg border border-gray-200 py-2 pr-3 pl-7 text-sm outline-none focus:border-green-500"
+                className="w-full rounded-lg border border-gray-200 py-2 pr-3 pl-12 text-sm outline-none focus:border-green-500"
               />
             </div>
           </div>
