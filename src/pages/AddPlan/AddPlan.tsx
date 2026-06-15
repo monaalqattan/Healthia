@@ -381,7 +381,7 @@ export default function AddPlan() {
           if (!d || !loaded[d.day]) return
           const mealMap: Record<
             string,
-            Array<{ name: string; kcal: number }>
+            Array<{ name: string; kcal: number; protein: number; carbs: number; fat: number }>
           > = {
             bf: [],
             lunch: [],
@@ -393,6 +393,10 @@ export default function AddPlan() {
             mealMap[key].push({
               name: String(m?.name ?? ""),
               kcal: Number(m?.calories ?? 0),
+              // ✅ نحافظ على الماكروز عند تعديل الخطة بدل ما نرميها
+              protein: Number((m as any)?.protein ?? 0),
+              carbs:   Number((m as any)?.carbs   ?? 0),
+              fat:     Number((m as any)?.fats    ?? 0),
             })
           })
           loaded[d.day] = DEFAULT_MEALS().map((meal) => ({
