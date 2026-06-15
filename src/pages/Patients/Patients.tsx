@@ -65,11 +65,9 @@ export default function Patients() {
       fetchPatients()
       return {}
     } catch (err: unknown) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : (err as { response?: { data?: { message?: string } } })?.response
-              ?.data?.message
+      // ✅ رسالة السيرفر الأول (زي "Email already exists") قبل رسالة axios العامة
+      const e = err as { response?: { data?: { message?: string } }; message?: string }
+      const message = e?.response?.data?.message || e?.message
       return { error: message || "Failed to create patient. Please try again." }
     }
   }
