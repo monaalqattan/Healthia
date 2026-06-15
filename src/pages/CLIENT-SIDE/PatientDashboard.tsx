@@ -49,24 +49,6 @@ function CircleProgress({
 // ─────────────────────────────────────────────────────────
 // Macro Bar
 // ─────────────────────────────────────────────────────────
-function MacroBar({ label, current, target, color }: {
-  label: string; current: number; target: number; color: string
-}) {
-  const pct = Math.min((current / (target || 1)) * 100, 100)
-  return (
-    <div className="flex-1">
-      <div className="flex justify-between items-center mb-1">
-        <span className="text-[10px] text-gray-400 uppercase tracking-wide">{label}</span>
-        <span className="text-[10px] font-bold text-gray-600">{current}g</span>
-      </div>
-      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-        <div className={`h-full rounded-full ${color}`} style={{ width: `${pct}%` }} />
-      </div>
-      <div className="text-[10px] text-gray-300 mt-0.5">/ {target}g</div>
-    </div>
-  )
-}
-
 // ─────────────────────────────────────────────────────────
 // Meal Type Colors
 // ─────────────────────────────────────────────────────────
@@ -146,10 +128,7 @@ export default function PatientDashboard() {
 
   // Calories — ✅ المستهلك = مجموع الوجبات اللي اتعلمت Done النهاردة
   const doneMeals = meals.filter((m: any) => m.completed)
-  const consumed        = doneMeals.reduce((sum: number, m: any) => sum + (m.calories || 0), 0)
-  const consumedProtein = doneMeals.reduce((sum: number, m: any) => sum + (m.protein  || 0), 0)
-  const consumedCarbs   = doneMeals.reduce((sum: number, m: any) => sum + (m.carbs    || 0), 0)
-  const consumedFats    = doneMeals.reduce((sum: number, m: any) => sum + (m.fats     || 0), 0)
+  const consumed    = doneMeals.reduce((sum: number, m: any) => sum + (m.calories || 0), 0)
   const calorieGoal = plan?.caloriesTarget || 2000
 
   // Rituals removed
@@ -265,11 +244,6 @@ export default function PatientDashboard() {
               label={consumed.toLocaleString()}
               sub={`/ ${calorieGoal.toLocaleString()} kcal`}
             />
-          </div>
-          <div className="flex gap-4 mb-4">
-            <MacroBar label="Protein" current={consumedProtein} target={plan?.protein || 120} color="bg-blue-400"   />
-            <MacroBar label="Carbs"   current={consumedCarbs}   target={plan?.carbs   || 250} color="bg-orange-400" />
-            <MacroBar label="Fats"    current={consumedFats}    target={plan?.fats    || 70}  color="bg-yellow-400" />
           </div>
           <button
             onClick={() => navigate('/patient/meal-plan')}
