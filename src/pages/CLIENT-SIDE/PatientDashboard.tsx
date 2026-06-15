@@ -144,8 +144,12 @@ export default function PatientDashboard() {
     ? Math.min(100, Math.round(((startWeight - currentWeight) / (startWeight - targetWeight)) * 100))
     : 0
 
-  // Calories
-  const consumed   = todayLog?.calories || 0
+  // Calories — ✅ المستهلك = مجموع الوجبات اللي اتعلمت Done النهاردة
+  const doneMeals = meals.filter((m: any) => m.completed)
+  const consumed        = doneMeals.reduce((sum: number, m: any) => sum + (m.calories || 0), 0)
+  const consumedProtein = doneMeals.reduce((sum: number, m: any) => sum + (m.protein  || 0), 0)
+  const consumedCarbs   = doneMeals.reduce((sum: number, m: any) => sum + (m.carbs    || 0), 0)
+  const consumedFats    = doneMeals.reduce((sum: number, m: any) => sum + (m.fats     || 0), 0)
   const calorieGoal = plan?.caloriesTarget || 2000
 
   // Rituals removed
@@ -263,9 +267,9 @@ export default function PatientDashboard() {
             />
           </div>
           <div className="flex gap-4 mb-4">
-            <MacroBar label="Protein" current={plan?.protein || 0} target={120} color="bg-blue-400"   />
-            <MacroBar label="Carbs"   current={plan?.carbs   || 0} target={250} color="bg-orange-400" />
-            <MacroBar label="Fats"    current={plan?.fats    || 0} target={70}  color="bg-yellow-400" />
+            <MacroBar label="Protein" current={consumedProtein} target={plan?.protein || 120} color="bg-blue-400"   />
+            <MacroBar label="Carbs"   current={consumedCarbs}   target={plan?.carbs   || 250} color="bg-orange-400" />
+            <MacroBar label="Fats"    current={consumedFats}    target={plan?.fats    || 70}  color="bg-yellow-400" />
           </div>
           <button
             onClick={() => navigate('/patient/meal-plan')}
