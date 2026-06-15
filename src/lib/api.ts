@@ -25,7 +25,7 @@ export async function loginRequest(
     body: JSON.stringify({ email, password }),
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.message ?? "فشل تسجيل الدخول")
+  if (!res.ok) throw new Error(data.message ?? "Login failed")
   return data
 }
 
@@ -43,7 +43,7 @@ export async function fetchMyPatients(): Promise<ApiPatient[]> {
     headers: { ...authHeaders() },
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.message ?? "فشل تحميل المرضى")
+  if (!res.ok) throw new Error(data.message ?? "Failed to load patients")
   return data
 }
 
@@ -68,7 +68,7 @@ export async function fetchFoods(opts?: {
   if (opts?.search) params.set("search", opts.search)
 
   const res = await fetch(`${BASE_URL}/foods?${params.toString()}`)
-  if (!res.ok) throw new Error("فشل تحميل الأكل")
+  if (!res.ok) throw new Error("Failed to load foods")
   return res.json()
 }
 
@@ -114,7 +114,7 @@ export async function savePlan(payload: SavePlanPayload) {
     body: JSON.stringify(payload),
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.message ?? "فشل حفظ الخطة")
+  if (!res.ok) throw new Error(data.message ?? "Failed to save the plan")
   return data
 }
 
@@ -124,7 +124,7 @@ export async function fetchPatientPlans(patientId: string) {
     headers: { ...authHeaders() },
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.message ?? "فشل تحميل الخطط")
+  if (!res.ok) throw new Error(data.message ?? "Failed to load plans")
   return data // array of plans
 }
 
@@ -139,7 +139,7 @@ export async function updatePlan(
     body: JSON.stringify(payload),
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.message ?? "فشل تعديل الخطة")
+  if (!res.ok) throw new Error(data.message ?? "Failed to update the plan")
   return data
 }
 // ─────────────────────────── المريض يعلّم يوم كـ completed ───────────────────────────
@@ -154,6 +154,6 @@ export async function markDayCompleted(
     body: JSON.stringify({ day, completed }),
   })
   const data = await res.json()
-  if (!res.ok) throw new Error(data.message ?? "فشل تحديث اليوم")
+  if (!res.ok) throw new Error(data.message ?? "Failed to update the day")
   return data
 }
