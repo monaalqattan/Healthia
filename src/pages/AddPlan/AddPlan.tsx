@@ -307,7 +307,7 @@ export default function AddPlan() {
   // ─── فتح modal الـ plans المحفوظة ───
   const handleOpenPlans = useCallback(async () => {
     if (!selectedPatientId) {
-      alert("اختاري مريض الأول")
+      alert("Please select a patient first")
       return
     }
     setLoadingPlans(true)
@@ -409,11 +409,11 @@ export default function AddPlan() {
 
   const handleSave = useCallback(async () => {
     if (!selectedPatientId) {
-      alert("اختاري مريض من القائمة فوق الأول")
+      alert("Please select a patient from the list above first")
       return
     }
     if (!targets.cal) {
-      alert("احسبي الـ Target الأول من الـ Calculator")
+      alert("Please calculate the Target first using the Calculator")
       return
     }
 
@@ -465,10 +465,10 @@ export default function AddPlan() {
     try {
       if (editPlanId) {
         await updatePlan(editPlanId, payload)
-        alert("تم تعديل الخطة بنجاح ✓")
+        alert("Plan updated successfully ✓")
       } else {
         await savePlan(payload)
-        alert("تم حفظ الخطة بنجاح ✓ هتظهر عند المريض")
+        alert("Plan saved successfully ✓ It will appear for the patient")
       }
     } catch (e) {
       alert((e as Error).message)
