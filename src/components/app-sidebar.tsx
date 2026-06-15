@@ -28,7 +28,7 @@ type AppSidebarProps = {
 export function AppSidebar({
   menuItems,
   bottomItems = [],
-  subtitle = "CLINICAL MANAGEMENT",
+  subtitle = "Clinical Management",
 }: AppSidebarProps) {
   const { user, logout } = useAuth()
 

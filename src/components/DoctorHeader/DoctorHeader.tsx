@@ -66,17 +66,17 @@ const DoctorHeader: React.FC<DoctorHeaderProps> = ({ doctor, onSave }) => {
 
         <div className="flex flex-wrap gap-6 pt-4 border-t border-gray-100">
           <div>
-            <div className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5">Total Patients</div>
+            <div className="text-[10px] text-gray-400  tracking-wide mb-0.5">Total Patients</div>
             <div className="text-2xl font-bold text-gray-800">{stats.totalPatients}</div>
           </div>
           <div>
-            <div className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5">Member Since</div>
+            <div className="text-[10px] text-gray-400  tracking-wide mb-0.5">Member Since</div>
             <div className="text-2xl font-bold text-gray-800">
               {doctor?.createdAt ? new Date(doctor.createdAt).getFullYear() : "—"}
             </div>
           </div>
           <div>
-            <div className="text-[10px] text-gray-400 uppercase tracking-wide mb-0.5">Phone</div>
+            <div className="text-[10px] text-gray-400  tracking-wide mb-0.5">Phone</div>
             <div className="text-lg font-bold text-gray-800">{doctor?.phone || "—"}</div>
           </div>
         </div>

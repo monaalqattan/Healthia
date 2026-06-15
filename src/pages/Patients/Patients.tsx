@@ -2,12 +2,12 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router"
 import { DataTable } from "@/components/PatientData/data-table"
 import { createColumns } from "@/components/PatientData/columns"
-import AddPatientModal from "./AddPatientModal"
+import AddPatientModal, { type NewPatientData } from "./AddPatientModal"
 import SuccessAlert from "./SuccessAlert"
 import { patientService } from "@/services/api"
 import Navbar from "@/components/Navbar/Navbar"
 
-// ✅ Type للـ Patient
+// Type للـ Patient
 type Patient = {
   _id: string
   name: string
@@ -19,7 +19,7 @@ type Patient = {
   [key: string]: unknown
 }
 
-// ✅ Type للـ form data
+//  Type للـ form data
 type PatientFormData = {
   name: string
   email: string

@@ -99,7 +99,7 @@ export default function AvailabilitySchedule() {
                 <div key={date} className="flex-1 min-w-0">
                   {/* Day Header */}
                   <div className={`text-center mb-2 ${isToday ? 'text-[#065F46]' : 'text-gray-400'}`}>
-                    <div className="text-[10px] font-bold uppercase">{label}</div>
+                    <div className="text-[10px] font-bold ">{label}</div>
                     <div className={`text-xs font-semibold ${isToday ? 'bg-[#065F46] text-white w-5 h-5 rounded-full flex items-center justify-center mx-auto mt-0.5' : ''}`}>
                       {dayNum}
                     </div>

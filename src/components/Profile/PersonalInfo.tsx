@@ -3,7 +3,7 @@ import { User } from 'lucide-react'
 
 const Row: React.FC<{ label: string; value: string }> = ({ label, value }) => (
   <div className="mb-4 last:mb-0">
-    <div className="text-[10px] text-gray-400 uppercase tracking-wide mb-1">{label}</div>
+    <div className="text-[10px] text-gray-400  tracking-wide mb-1">{label}</div>
     <div className="text-sm text-gray-700">{value || "—"}</div>
   </div>
 )

@@ -55,7 +55,7 @@ export default function SuccessAlert({ patient, onGoToProfile, onBack }: Props) 
               <button onClick={handleCopy}
                 className="flex items-center gap-1 text-green-700 text-xs font-semibold hover:text-green-800">
                 <Copy size={12} />
-                {copied ? "Copied!" : "COPY"}
+                {copied ? "Copied!" : "Copy"}
               </button>
             </div>
           </div>

@@ -6,8 +6,8 @@ const AuthNav = () => {
     // استخدمنا w-full مع max-w عشان يفضل متناسق مع محتوى الصفحة
     <nav className=" max-w-300 mx-auto flex w-full items-center justify-between bg-transparent px-10 py-8">
       <Link to="/" className="flex items-center">
-        {/* كبرنا اللوجو شوية (h-20) عشان يبقى واضح */}
-        <img src={logoImg} alt="Logo" className="h-20 w-auto object-contain" />
+        {/* Logo size increased further per user request */}
+        <img src={logoImg} alt="Logo" className="h-32 w-auto object-contain" />
       </Link>
 
       <div className="flex items-center gap-10">

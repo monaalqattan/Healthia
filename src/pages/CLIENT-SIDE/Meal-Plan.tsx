@@ -251,10 +251,10 @@ export default function MealPlanPage() {
             </div>
             <div className="flex gap-4 text-xs">
               <span className="text-gray-400">
-                REMAINING <span className="font-bold text-[#065F46]">{remaining} kcal</span>
+                Remaining <span className="font-bold text-[#065F46]">{remaining} kcal</span>
               </span>
               <span className="text-gray-400">
-                TOTAL <span className="font-bold text-gray-600">{totalCalories} kcal</span>
+                Total <span className="font-bold text-gray-600">{totalCalories} kcal</span>
               </span>
             </div>
           </div>

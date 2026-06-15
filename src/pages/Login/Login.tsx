@@ -88,11 +88,11 @@ const Login: React.FC = () => {
 
         <div className="relative z-10 flex w-full max-w-[400px] flex-col rounded-[32px] bg-white px-10 py-12 shadow-[0_12px_40px_rgba(0,0,0,0.06)]">
           <div className="mb-8">
-            <h1 className="mb-2 text-[28px] leading-tight font-bold text-[#1a1a1a]">
+            <h1 className="mb-2 text-[32px] leading-tight font-extrabold text-[#1a1a1a]">
               Welcome back
             </h1>
-            <p className="text-[13px] leading-relaxed font-medium text-[#888]">
-              Step into your personal sanctuary of wellness.
+            <p className="text-[16px] leading-relaxed font-semibold text-[#444]">
+              Step into your personal Land of Health.
             </p>
           </div>
 
@@ -101,7 +101,7 @@ const Login: React.FC = () => {
             {/* Email */}
             <div className="flex flex-col gap-2">
               <label className="px-1 text-[10px] font-bold tracking-[1.2px] text-[#aaa] uppercase">
-                EMAIL ADDRESS
+                Email Address
               </label>
               <input
                 type="email"
@@ -124,7 +124,7 @@ const Login: React.FC = () => {
             <div className="flex flex-col gap-2">
               <div className="flex items-center justify-between">
                 <label className="px-1 text-[10px] font-bold tracking-[1.2px] text-[#aaa] uppercase">
-                  PASSWORD
+                  Password
                 </label>
                 <Link to="/reset-password" className="text-[11px] font-bold text-[#1B7A4B] hover:underline">
                   Forgot Password?

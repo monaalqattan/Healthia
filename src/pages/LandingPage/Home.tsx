@@ -118,7 +118,7 @@ function Hero({ stats }: { stats: Stats }) {
         <div>
           <span className="mb-5 inline-flex items-center gap-1.5 rounded-full bg-[#e8f5ee] px-3 py-1.5 text-xs font-semibold text-[#1a6b3a]">
             <span className="h-1.5 w-1.5 rounded-full bg-[#1a6b3a]" />
-            CLINICAL NUTRITION PLATFORM
+            Clinical Nutrition Platform
           </span>
           <h1 className="mb-5 text-4xl leading-tight font-extrabold text-gray-900 md:text-5xl">
             Your Smart Health &amp; Nutrition Companion
