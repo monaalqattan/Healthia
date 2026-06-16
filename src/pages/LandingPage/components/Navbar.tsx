@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useNavigate } from "react-router"
 import { Menu, X } from "lucide-react"
-
+import logo from "../../assets/logo.png"
 export default function Navbar() {
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
@@ -19,9 +19,7 @@ export default function Navbar() {
   return (
     <nav className="fixed inset-x-0 top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-        <span className="text-xl font-bold tracking-tight text-[#1a6b3a]">
-          Healthia
-        </span>
+        <img src={logo} alt="Healthia" className="h-10 w-auto" />
 
         <ul className="hidden items-center gap-7 text-sm font-medium text-gray-600 md:flex">
           {links.map((item) => (
