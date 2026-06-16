@@ -114,6 +114,21 @@ export default function AddPlan() {
   })()
   const [planStartDate, setPlanStartDate] = useState<string>(todayStr)
 
+  // ─── Toast notification (بديل الـ alert) ───
+  const [toast, setToast] = useState<{
+    message: string
+    type: "success" | "error"
+  } | null>(null)
+
+  const showToast = useCallback(
+    (message: string, type: "success" | "error" = "success") => {
+      setToast({ message, type })
+      window.setTimeout(() => setToast(null), 3500)
+    },
+    []
+  )
+
+
   // ─── Define callbacks early to avoid reference errors ───
   const handleFormChange = useCallback(
     (key: keyof PatientForm, value: string | number) =>
@@ -307,7 +322,7 @@ export default function AddPlan() {
   // ─── فتح modal الـ plans المحفوظة ───
   const handleOpenPlans = useCallback(async () => {
     if (!selectedPatientId) {
-      alert("Please select a patient first")
+      showToast("Please select a patient first", "error")
       return
     }
     setLoadingPlans(true)
@@ -316,7 +331,7 @@ export default function AddPlan() {
       const plans = await fetchPatientPlans(selectedPatientId)
       setSavedPlans(plans)
     } catch (e) {
-      alert((e as Error).message)
+      showToast((e as Error).message, "error")
     } finally {
       setLoadingPlans(false)
     }
@@ -413,11 +428,11 @@ export default function AddPlan() {
 
   const handleSave = useCallback(async () => {
     if (!selectedPatientId) {
-      alert("Please select a patient from the list above first")
+      showToast("Please select a patient from the list above first", "error")
       return
     }
     if (!targets.cal) {
-      alert("Please calculate the Target first using the Calculator")
+      showToast("Please calculate the Target first using the Calculator", "error")
       return
     }
 
@@ -469,13 +484,13 @@ export default function AddPlan() {
     try {
       if (editPlanId) {
         await updatePlan(editPlanId, payload)
-        alert("Plan updated successfully ✓")
+        showToast("Plan updated successfully", "success")
       } else {
         await savePlan(payload)
-        alert("Plan saved successfully ✓ It will appear for the patient")
+        showToast("Plan saved successfully — it will appear for the patient", "success")
       }
     } catch (e) {
-      alert((e as Error).message)
+      showToast((e as Error).message, "error")
     }
   }, [
     weekMeals,
@@ -678,6 +693,34 @@ export default function AddPlan() {
   return (
     <>
       <Navbar />
+      {toast && (
+        <div
+          role="alert"
+          style={{
+            position: "fixed",
+            top: 20,
+            right: 20,
+            zIndex: 9999,
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            maxWidth: 360,
+            padding: "12px 16px",
+            borderRadius: 12,
+            fontSize: 14,
+            fontWeight: 600,
+            color: "#fff",
+            boxShadow: "0 8px 24px rgba(0,0,0,0.15)",
+            background: toast.type === "success" ? "#1a6b3a" : "#dc2626",
+          }}
+        >
+          <span style={{ fontSize: 16 }}>
+            {toast.type === "success" ? "✓" : "⚠"}
+          </span>
+          <span>{toast.message}</span>
+        </div>
+      )}
+
       <div className="addplan-page pt-6">
         {/* Topbar */}
         <div className="topbar">
