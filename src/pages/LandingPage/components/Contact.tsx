@@ -1,17 +1,36 @@
 import { useState } from "react"
 import { Check, Mail, MapPin, Phone, Send } from "lucide-react"
+import { supportService } from "@/services/api"
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: "", email: "", message: "" })
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    type: "",
+    message: "",
+  })
   const [sent, setSent] = useState(false)
   const [sending, setSending] = useState(false)
+  const [error, setError] = useState("")
 
   const handleSend = async () => {
-    if (!form.name || !form.email || !form.message) return
+    if (!form.name || !form.email || !form.type || !form.message) {
+      setError("Please fill in all fields")
+      return
+    }
     setSending(true)
-    await new Promise((r) => setTimeout(r, 800)) // simulate
-    setSent(true)
-    setSending(false)
+    setError("")
+    try {
+      await supportService.createTicket(form)
+      setSent(true)
+    } catch (err: any) {
+      setError(
+        err?.response?.data?.message ??
+          "Something went wrong. Please try again."
+      )
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -100,6 +119,25 @@ export default function Contact() {
                 ))}
                 <div>
                   <label className="mb-1 block text-[11px] font-semibold tracking-wide text-gray-500 uppercase">
+                    Issue Type
+                  </label>
+                  <select
+                    value={form.type}
+                    onChange={(e) =>
+                      setForm({ ...form, type: e.target.value })
+                    }
+                    className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-600 outline-none focus:border-[#1a6b3a]"
+                  >
+                    <option value="">Select a category</option>
+                    <option value="account">Account & Login</option>
+                    <option value="appointment">Appointments</option>
+                    <option value="billing">Billing</option>
+                    <option value="technical">Technical Issue</option>
+                    <option value="other">Other</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="mb-1 block text-[11px] font-semibold tracking-wide text-gray-500 uppercase">
                     Message
                   </label>
                   <textarea
@@ -112,10 +150,17 @@ export default function Contact() {
                     className="w-full resize-none rounded-xl border border-gray-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-[#1a6b3a]"
                   />
                 </div>
+                {error && (
+                  <p className="text-sm font-medium text-red-600">{error}</p>
+                )}
                 <button
                   onClick={handleSend}
                   disabled={
-                    sending || !form.name || !form.email || !form.message
+                    sending ||
+                    !form.name ||
+                    !form.email ||
+                    !form.type ||
+                    !form.message
                   }
                   className="flex items-center justify-center gap-2 rounded-xl bg-[#1a6b3a] py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#155730] disabled:opacity-50"
                 >
